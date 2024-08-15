@@ -116,7 +116,7 @@ fun CreateFlashCard(
                             .setCancelable(false)
                             .setPositiveButton("Ok") { dialog, id ->
                                 flashViewModel.resetViewModel()
-                                navController.navigate("Home")
+                                navController.navigate("FlashCardList")
                             }
                             .setNegativeButton("Cancel") { dialog, id -> dialog.dismiss() }
                         val alert = builder.create()

@@ -126,13 +126,13 @@ fun EditFlashCard(
                         Toast.makeText(context, "Please select at least one correct answer", Toast.LENGTH_SHORT).show()
                     }
                     else -> {
-                        flashRepository.createFlashCard(flashViewModel.title, flashViewModel.answers, flashViewModel.correctAnswerIndex)
+                        flashRepository.editNoteById(noteId.toIntOrNull(), flashCard = FlashCard(noteId.toInt(), flashViewModel.title, flashViewModel.answers, flashViewModel.correctAnswerIndex))
                         val builder = AlertDialog.Builder(context)
-                        builder.setMessage("Created note!")
+                        builder.setMessage("Updated note!")
                             .setCancelable(false)
                             .setPositiveButton("Ok") { dialog, id ->
                                 flashViewModel.resetViewModel()
-                                navController.navigate("Home")
+                                navController.navigate("FlashCardList")
                             }
                             .setNegativeButton("Cancel") { dialog, id -> dialog.dismiss() }
                         val alert = builder.create()
