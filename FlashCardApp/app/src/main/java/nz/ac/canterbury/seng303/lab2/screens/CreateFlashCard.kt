@@ -26,15 +26,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import nz.ac.canterbury.seng303.lab2.viewmodels.CreateFlashViewModel
+import nz.ac.canterbury.seng303.lab2.viewmodels.FlashViewModel
 import nz.ac.canterbury.seng303.lab2.viewmodels.NoteViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateFlashCard(
     navController: NavController,
-    createFlashViewModel: CreateFlashViewModel,
-    flashViewModel: NoteViewModel
+    flashViewModel: FlashViewModel,
 ) {
     val context = LocalContext.current
     Column(
@@ -44,8 +43,8 @@ fun CreateFlashCard(
             .verticalScroll(rememberScrollState())
     ) {
         OutlinedTextField(
-            value = createFlashViewModel.title,
-            onValueChange = { createFlashViewModel.updateTitle(it) },
+            value = flashViewModel.title,
+            onValueChange = { flashViewModel.updateTitle(it) },
             label = { Text("Question") },
             modifier = Modifier
                 .fillMaxWidth()
@@ -53,17 +52,17 @@ fun CreateFlashCard(
         )
 
         // Display answer fields
-        createFlashViewModel.answers.forEachIndexed { index, answer ->
+        flashViewModel.answers.forEachIndexed { index, answer ->
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp)
             ) {
-                if (createFlashViewModel.answers.size > 2) {
+                if (flashViewModel.answers.size > 2) {
                     IconButton(
                         onClick = {
-                            createFlashViewModel.removeAnswer(index)
+                            flashViewModel.removeAnswer(index)
                         },
                         modifier = Modifier.padding(start = 8.dp)
                     ) {
@@ -75,7 +74,7 @@ fun CreateFlashCard(
                 }
                 OutlinedTextField(
                     value = answer,
-                    onValueChange = { createFlashViewModel.updateAnswers(it, index) },
+                    onValueChange = { flashViewModel.updateAnswers(it, index) },
                     label = { Text("Answer ${index + 1}") },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -83,15 +82,15 @@ fun CreateFlashCard(
                         .padding(start = 8.dp)
                 )
                 RadioButton(
-                    selected = createFlashViewModel.correctAnswerIndex == index,
-                    onClick = { createFlashViewModel.setCorrectAnswer(index) }
+                    selected = flashViewModel.correctAnswerIndex == index,
+                    onClick = { flashViewModel.setCorrectAnswer(index) }
                 )
             }
         }
 
         // Button to add more answer fields
         Button(
-            onClick = { createFlashViewModel.addAnswers("") },
+            onClick = { flashViewModel.addAnswers("") },
             modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
         ) {
             Text("Add Answer Field")
@@ -99,18 +98,17 @@ fun CreateFlashCard(
 
         Button(
             onClick = {
-                flashViewModel.createNote(createFlashViewModel.title, createFlashViewModel.content)
-                val builder = AlertDialog.Builder(context)
-                builder.setMessage("Created note!")
-                    .setCancelable(false)
-                    .setPositiveButton("Ok") { dialog, id ->
-                        createFlashViewModel.updateTitle("")
-                        createFlashViewModel.updateContent("")
-                        navController.navigate("noteList")
-                    }
-                    .setNegativeButton("Cancel") { dialog, id -> dialog.dismiss() }
-                val alert = builder.create()
-                alert.show()
+//                flashViewModel.createNote(createFlashViewModel.title, "")
+//                val builder = AlertDialog.Builder(context)
+//                builder.setMessage("Created note!")
+//                    .setCancelable(false)
+//                    .setPositiveButton("Ok") { dialog, id ->
+//                        createFlashViewModel.updateTitle("")
+//                        navController.navigate("noteList")
+//                    }
+//                    .setNegativeButton("Cancel") { dialog, id -> dialog.dismiss() }
+//                val alert = builder.create()
+//                alert.show()
 
             },
             modifier = Modifier

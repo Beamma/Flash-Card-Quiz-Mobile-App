@@ -5,19 +5,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 
-class CreateFlashViewModel : ViewModel() {
+class FlashViewModel : ViewModel() {
     var title by mutableStateOf("")
         private set
 
     fun updateTitle(newTitle: String) {
         title = newTitle
-    }
-
-    var content by mutableStateOf("")
-        private set
-
-    fun updateContent(newContent: String) {
-        content = newContent
     }
 
     var answers by mutableStateOf(listOf("", ""))

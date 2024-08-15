@@ -35,8 +35,8 @@ import nz.ac.canterbury.seng303.lab2.screens.NoteCard
 import nz.ac.canterbury.seng303.lab2.screens.NoteGrid
 import nz.ac.canterbury.seng303.lab2.screens.NoteList
 import nz.ac.canterbury.seng303.lab2.ui.theme.Lab1Theme
-import nz.ac.canterbury.seng303.lab2.viewmodels.CreateFlashViewModel
 import nz.ac.canterbury.seng303.lab2.viewmodels.EditNoteViewModel
+import nz.ac.canterbury.seng303.lab2.viewmodels.FlashViewModel
 import nz.ac.canterbury.seng303.lab2.viewmodels.NoteViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel as koinViewModel
 
@@ -75,7 +75,7 @@ class MainActivity : ComponentActivity() {
                 ) {
 
                     Box(modifier = Modifier.padding(it)) {
-                        val createFlashViewModel: CreateFlashViewModel = viewModel()
+                        val flashViewModel: FlashViewModel = viewModel()
                         val editNoteViewModel: EditNoteViewModel = viewModel()
                         NavHost(navController = navController, startDestination = "Home") {
                             composable("Home") {
@@ -104,7 +104,7 @@ class MainActivity : ComponentActivity() {
                                 NoteGrid(navController, noteViewModel)
                             }
                             composable("CreateFlashCard") {
-                                CreateFlashCard(navController = navController, createFlashViewModel = createFlashViewModel, flashViewModel = noteViewModel)
+                                CreateFlashCard(navController = navController, flashViewModel = flashViewModel)
                             }
                         }
                     }
