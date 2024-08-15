@@ -1,6 +1,10 @@
 package nz.ac.canterbury.seng303.lab2.screens
 
 import android.app.AlertDialog
+import android.app.SearchManager
+import android.content.Intent
+import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.Divider
@@ -78,6 +83,25 @@ fun FlashCardItem(navController: NavController, flashCard: FlashCard, flashRepos
                 .weight(1f)
                 .fillMaxWidth()
         ) {
+            // Search button with icon
+            IconButton(
+                onClick = {
+                    val query = flashCard.title
+                    if (query.isNotEmpty()) {
+                        val intent = Intent(Intent.ACTION_WEB_SEARCH).apply {
+                            putExtra(SearchManager.QUERY, flashCard.title)
+                        }
+                        context.startActivity(intent)
+                    } else {
+                        Toast.makeText(context, "Question cannot be empty", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "Search"
+                )
+            }
             IconButton(onClick = {
                 navController.navigate("EditNote/${flashCard.id}")
             }) {
