@@ -45,4 +45,8 @@ class FlashViewModel : ViewModel() {
         }
     }
 
+    fun isCorrectAnswer(index: Int): Boolean {
+        return (index == correctAnswerIndex)
+    }
+
 }

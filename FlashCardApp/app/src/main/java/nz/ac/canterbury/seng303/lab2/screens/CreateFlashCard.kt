@@ -11,6 +11,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -57,6 +58,21 @@ fun CreateFlashCard(
                     .fillMaxWidth()
                     .padding(bottom = 8.dp)
             ) {
+                OutlinedTextField(
+                    value = answer,
+                    onValueChange = { flashViewModel.updateAnswers(it, index) },
+                    label = { Text("Answer ${index + 1}") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .padding(start = 8.dp)
+                )
+                Checkbox(
+                    checked = flashViewModel.isCorrectAnswer(index),
+                    onCheckedChange = { isChecked ->
+                        flashViewModel.setCorrectAnswer(index)
+                    }
+                )
                 if (flashViewModel.answers.size > 2) {
                     IconButton(
                         onClick = {
@@ -70,19 +86,6 @@ fun CreateFlashCard(
                         )
                     }
                 }
-                OutlinedTextField(
-                    value = answer,
-                    onValueChange = { flashViewModel.updateAnswers(it, index) },
-                    label = { Text("Answer ${index + 1}") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                        .padding(start = 8.dp)
-                )
-                RadioButton(
-                    selected = flashViewModel.correctAnswerIndex == index,
-                    onClick = { flashViewModel.setCorrectAnswer(index) }
-                )
             }
         }
 
