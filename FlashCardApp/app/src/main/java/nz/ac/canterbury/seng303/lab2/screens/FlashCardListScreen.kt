@@ -58,15 +58,14 @@ fun FlashCardItem(navController: NavController, flashCard: FlashCard, flashRepos
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
-            .clickable { navController.navigate("NoteCard/${flashCard.id}") },
+            .clickable { navController.navigate("FlashCard/${flashCard.id}") },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        // Display title and timestamp
+        // Title Column
         Column(
             modifier = Modifier
                 .weight(3f)
-                .fillMaxWidth()
         ) {
             Text(
                 text = flashCard.title,
@@ -76,20 +75,18 @@ fun FlashCardItem(navController: NavController, flashCard: FlashCard, flashRepos
             )
         }
 
+        // Action Buttons Row
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.End,
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
+            modifier = Modifier.weight(1f)
         ) {
-            // Search button with icon
             IconButton(
                 onClick = {
                     val query = flashCard.title
                     if (query.isNotEmpty()) {
                         val intent = Intent(Intent.ACTION_WEB_SEARCH).apply {
-                            putExtra(SearchManager.QUERY, flashCard.title)
+                            putExtra(SearchManager.QUERY, query)
                         }
                         context.startActivity(intent)
                     } else {
@@ -103,7 +100,7 @@ fun FlashCardItem(navController: NavController, flashCard: FlashCard, flashRepos
                 )
             }
             IconButton(onClick = {
-                navController.navigate("EditNote/${flashCard.id}")
+                navController.navigate("FlashCard/${flashCard.id}")
             }) {
                 Icon(
                     imageVector = Icons.Outlined.Edit,

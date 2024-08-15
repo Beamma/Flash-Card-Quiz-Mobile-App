@@ -87,7 +87,7 @@ class MainActivity : ComponentActivity() {
 //                                val noteId = backStackEntry.arguments?.getString("noteId")
 //                                noteId?.let { noteIdParam: String -> NoteCard(noteIdParam, flashRepository)
 //                            }}
-                            composable("EditNote/{noteId}", arguments = listOf(navArgument("noteId") {
+                            composable("FlashCard/{noteId}", arguments = listOf(navArgument("noteId") {
                                 type = NavType.StringType
                             })
                             ) { backStackEntry ->
