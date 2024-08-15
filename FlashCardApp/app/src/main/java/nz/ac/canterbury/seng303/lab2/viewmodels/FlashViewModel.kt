@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import nz.ac.canterbury.seng303.lab2.models.FlashCard
 
 class FlashViewModel : ViewModel() {
     var title by mutableStateOf("")
@@ -53,6 +54,14 @@ class FlashViewModel : ViewModel() {
 
     fun isCorrectAnswer(index: Int): Boolean {
         return (index == correctAnswerIndex)
+    }
+
+    fun setDefaultValues(selectedFlashCard: FlashCard?) {
+        selectedFlashCard?.let {
+            title = it.title
+            answers = it.answers
+            correctAnswerIndex = it.correctAnswerIndex
+        }
     }
 
 }

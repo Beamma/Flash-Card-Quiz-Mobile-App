@@ -19,22 +19,38 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import nz.ac.canterbury.seng303.lab2.models.FlashCard
 import nz.ac.canterbury.seng303.lab2.viewmodels.FlashRepository
 import nz.ac.canterbury.seng303.lab2.viewmodels.FlashViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateFlashCard(
+fun EditFlashCard(
     navController: NavController,
+    noteId: String,
     flashViewModel: FlashViewModel,
     flashRepository: FlashRepository
 ) {
     val context = LocalContext.current
+    val selectedFlashCardState by flashRepository.selectedFlashCard.collectAsState(null)
+    val flashCard: FlashCard? = selectedFlashCardState // we explicitly assign to note to help the compilers smart cast out
+
+    LaunchedEffect(flashCard) {  // Get the default values for the note properties
+        if (flashCard == null) {
+            flashRepository.getNoteById(noteId.toIntOrNull())
+        } else {
+            flashViewModel.setDefaultValues(flashCard)
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
