@@ -28,17 +28,17 @@ class NoteViewModel(
             .collect { _notes.emit(it) }
     }
 
-    fun loadDefaultNotesIfNoneExist() = viewModelScope.launch {
-        val currentNotes = noteStorage.getAll().first()
-        if (currentNotes.isEmpty()) {
-            Log.d("NOTE_VIEW_MODEL", "Inserting default notes...")
-            noteStorage.insertAll(Note.getNotes())
-                .catch { Log.w("NOTE_VIEW_MODEL", "Could not insert default notes") }.collect {
-                Log.d("NOTE_VIEW_MODEL", "Default notes inserted successfully")
-                _notes.emit(Note.getNotes())
-            }
-        }
-    }
+//    fun loadDefaultNotesIfNoneExist() = viewModelScope.launch {
+//        val currentNotes = noteStorage.getAll().first()
+//        if (currentNotes.isEmpty()) {
+//            Log.d("NOTE_VIEW_MODEL", "Inserting default notes...")
+//            noteStorage.insertAll(Note.getNotes())
+//                .catch { Log.w("NOTE_VIEW_MODEL", "Could not insert default notes") }.collect {
+//                Log.d("NOTE_VIEW_MODEL", "Default notes inserted successfully")
+//                _notes.emit(Note.getNotes())
+//            }
+//        }
+//    }
 
     fun createNote(title: String, content: String) = viewModelScope.launch {
         val note = Note(
