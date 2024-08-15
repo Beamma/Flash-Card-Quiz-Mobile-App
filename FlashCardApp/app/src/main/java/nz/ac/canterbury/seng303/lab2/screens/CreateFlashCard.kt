@@ -18,7 +18,7 @@ import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateNote(
+fun CreateFlashCard(
     navController: NavController,
     title: String,
     onTitleChange: (String) -> Unit,

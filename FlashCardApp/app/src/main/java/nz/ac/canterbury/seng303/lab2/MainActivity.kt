@@ -27,8 +27,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import nz.ac.canterbury.seng303.lab2.screens.CreateNote
-import nz.ac.canterbury.seng303.lab2.screens.EditNote
+import nz.ac.canterbury.seng303.lab2.screens.CreateFlashCard
 import nz.ac.canterbury.seng303.lab2.screens.NoteCard
 import nz.ac.canterbury.seng303.lab2.screens.NoteGrid
 import nz.ac.canterbury.seng303.lab2.screens.NoteList
@@ -83,21 +82,14 @@ class MainActivity : ComponentActivity() {
                                 val noteId = backStackEntry.arguments?.getString("noteId")
                                 noteId?.let { noteIdParam: String -> NoteCard(noteIdParam, noteViewModel) }
                             }
-                            composable("EditNote/{noteId}", arguments = listOf(navArgument("noteId") {
-                                type = NavType.StringType
-                            })
-                            ) { backStackEntry ->
-                                val noteId = backStackEntry.arguments?.getString("noteId")
-                                noteId?.let { noteIdParam: String -> EditNote(noteIdParam, editNoteViewModel, noteViewModel, navController = navController) }
-                            }
                             composable("NoteList") {
                                 NoteList(navController, noteViewModel)
                             }
                             composable("NoteGrid") {
                                 NoteGrid(navController, noteViewModel)
                             }
-                            composable("CreateNote") {
-                                CreateNote(navController = navController, title = createNoteViewModel.title,
+                            composable("CreateFlashCard") {
+                                CreateFlashCard(navController = navController, title = createNoteViewModel.title,
                                     onTitleChange = {newTitle ->
                                             val title = newTitle.replace("badword", "*******")
                                             createNoteViewModel.updateTitle(title)
@@ -105,7 +97,6 @@ class MainActivity : ComponentActivity() {
                                     content = createNoteViewModel.content, onContentChange = {newContent -> createNoteViewModel.updateContent(newContent)},
                                     createNoteFn = {title, content -> noteViewModel.createNote(title, content)}
                                     )
-//                                CreateNoteStandAlone(navController = navController)
                             }
                         }
                     }
@@ -123,18 +114,15 @@ fun Home(navController: NavController) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Welcome to Lab 2")
-        Button(onClick = { navController.navigate("CreateNote") }) {
-            Text("Create Note")
-        }
-        Button(onClick = { navController.navigate("NoteCard/1") }) {
-            Text("Go to Note Card")
+        Text("Welcome to Flash Card App")
+        Button(onClick = { navController.navigate("CreateFlashCard") }) {
+            Text("Create Flash Card")
         }
         Button(onClick = { navController.navigate("NoteList") }) {
-            Text("Note List")
+            Text("View Flash Cards")
         }
         Button(onClick = { navController.navigate("NoteGrid") }) {
-            Text("Note Grid")
+            Text("Play Flash Cards")
         }
     }
 }
