@@ -1,6 +1,7 @@
 package nz.ac.canterbury.seng303.lab2.screens
 
 import android.app.AlertDialog
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -99,18 +100,30 @@ fun CreateFlashCard(
 
         Button(
             onClick = {
-                flashRepository.createFlashCard(flashViewModel.title, flashViewModel.answers, flashViewModel.correctAnswerIndex)
-                val builder = AlertDialog.Builder(context)
-                builder.setMessage("Created note!")
-                    .setCancelable(false)
-                    .setPositiveButton("Ok") { dialog, id ->
-                        flashViewModel.updateTitle("")
-                        navController.navigate("Home")
+                when {
+                    flashViewModel.title.isEmpty() -> {
+                        Toast.makeText(context, "Question cannot be empty", Toast.LENGTH_SHORT).show()
                     }
-                    .setNegativeButton("Cancel") { dialog, id -> dialog.dismiss() }
-                val alert = builder.create()
-                alert.show()
-
+                    flashViewModel.answers.isEmpty() -> {
+                        Toast.makeText(context, "All answers must be filled", Toast.LENGTH_SHORT).show()
+                    }
+                    flashViewModel.correctAnswerIndex == -1 -> {
+                        Toast.makeText(context, "Please select at least one correct answer", Toast.LENGTH_SHORT).show()
+                    }
+                    else -> {
+                        flashRepository.createFlashCard(flashViewModel.title, flashViewModel.answers, flashViewModel.correctAnswerIndex)
+                        val builder = AlertDialog.Builder(context)
+                        builder.setMessage("Created note!")
+                            .setCancelable(false)
+                            .setPositiveButton("Ok") { dialog, id ->
+                                flashViewModel.resetViewModel()
+                                navController.navigate("Home")
+                            }
+                            .setNegativeButton("Cancel") { dialog, id -> dialog.dismiss() }
+                        val alert = builder.create()
+                        alert.show()
+                    }
+                }
             },
             modifier = Modifier
                 .fillMaxWidth()

@@ -9,12 +9,15 @@ class FlashViewModel : ViewModel() {
     var title by mutableStateOf("")
         private set
 
+    var answers by mutableStateOf(listOf("", ""))
+        private set
+
+    var correctAnswerIndex by mutableStateOf(-1)
+        private set
+
     fun updateTitle(newTitle: String) {
         title = newTitle
     }
-
-    var answers by mutableStateOf(listOf("", ""))
-        private set
 
     fun updateAnswers(newContent: String, index: Int) {
         answers = answers.toMutableList().also {
@@ -22,12 +25,15 @@ class FlashViewModel : ViewModel() {
         }
     }
 
+    fun resetViewModel() {
+        answers = listOf("", "")
+        title = ""
+        correctAnswerIndex = -1
+    }
+
     fun addAnswers(newContent: String) {
         answers = answers + newContent
     }
-
-    var correctAnswerIndex by mutableStateOf(-1)
-        private set
 
     fun setCorrectAnswer(index: Int) {
         correctAnswerIndex = index
