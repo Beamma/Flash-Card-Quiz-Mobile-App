@@ -1,5 +1,6 @@
 package nz.ac.canterbury.seng303.lab2.screens
 
+import android.app.AlertDialog
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
@@ -37,7 +39,7 @@ fun FlashCardList(navController: NavController, flashRepository: FlashRepository
     } else {
         LazyColumn {
             items(flashCards) { flashCard ->
-                FlashCardItem(navController = navController, flashCard = flashCard)
+                FlashCardItem(navController = navController, flashCard = flashCard, flashRepository = flashRepository)
                 Divider() // Add a divider between items
             }
         }
@@ -45,7 +47,7 @@ fun FlashCardList(navController: NavController, flashRepository: FlashRepository
 }
 
 @Composable
-fun FlashCardItem(navController: NavController, flashCard: FlashCard) {
+fun FlashCardItem(navController: NavController, flashCard: FlashCard, flashRepository: FlashRepository) {
     val context = LocalContext.current
     Row(
         modifier = Modifier
@@ -83,6 +85,26 @@ fun FlashCardItem(navController: NavController, flashCard: FlashCard) {
                     imageVector = Icons.Outlined.Edit,
                     contentDescription = "Edit",
                     tint = Color.Blue
+                )
+            }
+            IconButton(onClick = {
+                val builder = AlertDialog.Builder(context)
+                builder.setMessage("Delete note \"${flashCard.title}\"?")
+                    .setCancelable(false)
+                    .setPositiveButton("Delete") { dialog, id ->
+                        flashRepository.deleteNoteById(flashCard.id)
+                        dialog.dismiss()
+                    }
+                    .setNegativeButton("Cancel") { dialog, id ->
+                        dialog.dismiss()
+                    }
+                val alert = builder.create()
+                alert.show()
+            }) {
+                Icon(
+                    imageVector = Icons.Outlined.Delete,
+                    contentDescription = "Delete",
+                    tint = Color.Red
                 )
             }
         }
