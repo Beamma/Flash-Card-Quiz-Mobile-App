@@ -30,10 +30,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import nz.ac.canterbury.seng303.lab2.screens.CreateFlashCard
-import nz.ac.canterbury.seng303.lab2.screens.EditNote
-import nz.ac.canterbury.seng303.lab2.screens.NoteCard
-import nz.ac.canterbury.seng303.lab2.screens.NoteGrid
-import nz.ac.canterbury.seng303.lab2.screens.NoteList
+//import nz.ac.canterbury.seng303.lab2.screens.NoteCard
+//import nz.ac.canterbury.seng303.lab2.screens.NoteGrid
+//import nz.ac.canterbury.seng303.lab2.screens.NoteList
 import nz.ac.canterbury.seng303.lab2.ui.theme.Lab1Theme
 import nz.ac.canterbury.seng303.lab2.viewmodels.EditNoteViewModel
 import nz.ac.canterbury.seng303.lab2.viewmodels.FlashViewModel
@@ -76,33 +75,33 @@ class MainActivity : ComponentActivity() {
 
                     Box(modifier = Modifier.padding(it)) {
                         val flashViewModel: FlashViewModel = viewModel()
-                        val editNoteViewModel: EditNoteViewModel = viewModel()
+//                        val editNoteViewModel: EditNoteViewModel = viewModel()
                         NavHost(navController = navController, startDestination = "Home") {
                             composable("Home") {
                                 Home(navController = navController)
                             }
-                            composable(
-                                "NoteCard/{noteId}",
-                                arguments = listOf(navArgument("noteId") {
-                                    type = NavType.StringType
-                                })
-                            ) { backStackEntry ->
-                                val noteId = backStackEntry.arguments?.getString("noteId")
-                                noteId?.let { noteIdParam: String -> NoteCard(noteIdParam, flashRepository)
-                            }}
-                            composable("EditNote/{noteId}", arguments = listOf(navArgument("noteId") {
-                                type = NavType.StringType
-                            })
-                            ) { backStackEntry ->
-                                val noteId = backStackEntry.arguments?.getString("noteId")
-                                noteId?.let { noteIdParam: String -> EditNote(noteIdParam, editNoteViewModel, flashRepository, navController = navController)}
-                            }
-                            composable("NoteList") {
-                                NoteList(navController, flashRepository)
-                            }
-                            composable("NoteGrid") {
-                                NoteGrid(navController, flashRepository)
-                            }
+//                            composable(
+//                                "NoteCard/{noteId}",
+//                                arguments = listOf(navArgument("noteId") {
+//                                    type = NavType.StringType
+//                                })
+//                            ) { backStackEntry ->
+//                                val noteId = backStackEntry.arguments?.getString("noteId")
+//                                noteId?.let { noteIdParam: String -> NoteCard(noteIdParam, flashRepository)
+//                            }}
+//                            composable("EditNote/{noteId}", arguments = listOf(navArgument("noteId") {
+//                                type = NavType.StringType
+//                            })
+//                            ) { backStackEntry ->
+//                                val noteId = backStackEntry.arguments?.getString("noteId")
+//                                noteId?.let { noteIdParam: String -> EditNote(noteIdParam, editNoteViewModel, flashRepository, navController = navController)}
+//                            }
+//                            composable("NoteList") {
+//                                NoteList(navController, flashRepository)
+//                            }
+//                            composable("NoteGrid") {
+//                                NoteGrid(navController, flashRepository)
+//                            }
                             composable("CreateFlashCard") {
                                 CreateFlashCard(navController = navController, flashViewModel = flashViewModel)
                             }
@@ -126,11 +125,11 @@ fun Home(navController: NavController) {
         Button(onClick = { navController.navigate("CreateFlashCard") }) {
             Text("Create Flash Card")
         }
-        Button(onClick = { navController.navigate("NoteList") }) {
-            Text("View Flash Cards")
-        }
-        Button(onClick = { navController.navigate("NoteGrid") }) {
-            Text("Play Flash Cards")
-        }
+//        Button(onClick = { navController.navigate("NoteList") }) {
+//            Text("View Flash Cards")
+//        }
+//        Button(onClick = { navController.navigate("NoteGrid") }) {
+//            Text("Play Flash Cards")
+//        }
     }
 }

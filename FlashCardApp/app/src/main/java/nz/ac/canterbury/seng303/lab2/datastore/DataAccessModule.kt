@@ -32,7 +32,7 @@ val dataAccessModule = module {
 
     viewModel {
         FlashRepository(
-            noteStorage = get()
+            flashStorage = get()
         )
     }
 }

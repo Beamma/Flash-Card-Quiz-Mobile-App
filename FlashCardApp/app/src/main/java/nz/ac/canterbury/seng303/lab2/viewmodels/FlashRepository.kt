@@ -10,21 +10,21 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import nz.ac.canterbury.seng303.lab2.datastore.Storage
+import nz.ac.canterbury.seng303.lab2.models.FlashCard
 import nz.ac.canterbury.seng303.lab2.models.Note
 import kotlin.random.Random
 
 class FlashRepository(
-    private val noteStorage: Storage<Note>
+    private val flashStorage: Storage<FlashCard>
 ) : ViewModel() {
 
-    private val _notes = MutableStateFlow<List<Note>>(emptyList())
-    val notes: StateFlow<List<Note>> get() = _notes
+    private val _notes = MutableStateFlow<List<FlashCard>>(emptyList())
 
-    private val _selectedNote = MutableStateFlow<Note?>(null)
-    val selectedNote: StateFlow<Note?> = _selectedNote
+    private val _selectedFlashCard = MutableStateFlow<FlashCard?>(null)
+    val selectedFlashCard: StateFlow<FlashCard?> = _selectedFlashCard
 
     fun getNotes() = viewModelScope.launch {
-        noteStorage.getAll().catch { Log.e("NOTE_VIEW_MODEL", it.toString()) }
+        flashStorage.getAll().catch { Log.e("NOTE_VIEW_MODEL", it.toString()) }
             .collect { _notes.emit(it) }
     }
 
@@ -40,42 +40,41 @@ class FlashRepository(
 //        }
 //    }
 
-    fun createNote(title: String, content: String) = viewModelScope.launch {
-        val note = Note(
+    fun createNote(title: String, answers: List<String>, correctAnswerIndex: Int) = viewModelScope.launch {
+        val flashCard = FlashCard(
             id = Random.nextInt(0, Int.MAX_VALUE),
             title = title,
-            content = content,
-            timestamp = System.currentTimeMillis(),
-            false
+            answers = answers,
+            correctAnswerIndex = correctAnswerIndex
         )
-        noteStorage.insert(note).catch { Log.e("NOTE_VIEW_MODEL", "Could not insert note") }
+        flashStorage.insert(flashCard).catch { Log.e("NOTE_VIEW_MODEL", "Could not insert note") }
             .collect()
-        noteStorage.getAll().catch { Log.e("NOTE_VIEW_MODEL", it.toString()) }
+        flashStorage.getAll().catch { Log.e("NOTE_VIEW_MODEL", it.toString()) }
             .collect { _notes.emit(it) }
     }
 
     fun getNoteById(noteId: Int?) = viewModelScope.launch {
         if (noteId != null) {
-            _selectedNote.value = noteStorage.get { it.getIdentifier() == noteId }.first()
+            _selectedFlashCard.value = flashStorage.get { it.getIdentifier() == noteId }.first()
         } else {
-            _selectedNote.value = null
+            _selectedFlashCard.value = null
         }
     }
 
-    fun deleteNoteById(noteId: Int?) = viewModelScope.launch {
-        Log.d("NOTE_VIEW_MODEL", "Deleting note: $noteId")
-        if (noteId != null) {
-            noteStorage.delete(noteId).collect()
-            noteStorage.getAll().catch { Log.e("NOTE_VIEW_MODEL", it.toString()) }
+    fun deleteNoteById(flashCardId: Int?) = viewModelScope.launch {
+        Log.d("NOTE_VIEW_MODEL", "Deleting note: $flashCardId")
+        if (flashCardId != null) {
+            flashStorage.delete(flashCardId).collect()
+            flashStorage.getAll().catch { Log.e("NOTE_VIEW_MODEL", it.toString()) }
                 .collect { _notes.emit(it) }
         }
     }
 
-    fun editNoteById(noteId: Int?, note: Note) = viewModelScope.launch {
-        Log.d("NOTE_VIEW_MODEL", "Editing note: $noteId")
-        if (noteId != null) {
-            noteStorage.edit(noteId, note).collect()
-            noteStorage.getAll().catch { Log.e("NOTE_VIEW_MODEL", it.toString()) }
+    fun editNoteById(flashCardId: Int?, flashCard: FlashCard) = viewModelScope.launch {
+        Log.d("NOTE_VIEW_MODEL", "Editing note: $flashCardId")
+        if (flashCardId != null) {
+            flashStorage.edit(flashCardId, flashCard).collect()
+            flashStorage.getAll().catch { Log.e("NOTE_VIEW_MODEL", it.toString()) }
                 .collect { _notes.emit(it) }
         }
     }
