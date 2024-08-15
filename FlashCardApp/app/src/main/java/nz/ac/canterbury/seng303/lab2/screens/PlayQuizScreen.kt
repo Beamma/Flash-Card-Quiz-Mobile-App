@@ -12,13 +12,15 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import androidx.compose.material3.Typography
 import androidx.navigation.NavController
+import nz.ac.canterbury.seng303.lab2.models.FlashCard
 
 import nz.ac.canterbury.seng303.lab2.viewmodels.FlashRepository
 
 @Composable
 fun PlayQuizScreen(navController: NavController, flashRepository: FlashRepository) {
     // Retrieve flashcards from the repository
-    val flashcards by flashRepository.flashCards.collectAsState()
+    flashRepository.getFlashCards()
+    val flashCards: List<FlashCard> by flashRepository.flashCards.collectAsState(emptyList())
     var currentIndex by remember { mutableStateOf(0) }
     var selectedAnswer by remember { mutableStateOf<String?>(null) }
     var isAnswerCorrect by remember { mutableStateOf<Boolean?>(null) }
@@ -31,28 +33,22 @@ fun PlayQuizScreen(navController: NavController, flashRepository: FlashRepositor
         flashRepository.getFlashCards()
     }
 
-    LaunchedEffect(currentIndex) {
-        if (currentIndex >= flashcards.size) {
-            showSummary = true
-        } else {
-            selectedAnswer = null
-            isAnswerCorrect = null
-        }
-    }
-
-    // Handle automatic progression to the next flashcard
     LaunchedEffect(selectedAnswer) {
-        if (selectedAnswer != null) {
+        if (selectedAnswer != null && currentIndex < flashCards.size) {
             delay(1000) // Wait for 1 second
             currentIndex++
             selectedAnswer = null
             isAnswerCorrect = null
+            // Check if we've reached the end of the flashcards
+            if (currentIndex >= flashCards.size) {
+                showSummary = true
+            }
         }
     }
 
     // Display the current flashcard
     if (!showSummary) {
-        val currentFlashcard = flashcards.getOrNull(currentIndex)
+        val currentFlashcard = flashCards.getOrNull(currentIndex)
         currentFlashcard?.let {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(text = it.title)
@@ -82,7 +78,7 @@ fun PlayQuizScreen(navController: NavController, flashRepository: FlashRepositor
     } else {
         // Display the summary of the user's performance
         val correctAnswers = userAnswers.count { it.second }
-        val totalQuestions = flashcards.size
+        val totalQuestions = flashCards.size
         Column(modifier = Modifier.padding(16.dp)) {
             Text(text = "Quiz Completed!")
             Spacer(modifier = Modifier.height(16.dp))
