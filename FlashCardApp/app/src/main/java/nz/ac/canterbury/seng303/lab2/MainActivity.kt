@@ -32,6 +32,7 @@ import androidx.navigation.navArgument
 import nz.ac.canterbury.seng303.lab2.screens.CreateFlashCard
 import nz.ac.canterbury.seng303.lab2.screens.EditFlashCard
 import nz.ac.canterbury.seng303.lab2.screens.FlashCardList
+import nz.ac.canterbury.seng303.lab2.screens.PlayQuizScreen
 import nz.ac.canterbury.seng303.lab2.ui.theme.Lab1Theme
 import nz.ac.canterbury.seng303.lab2.viewmodels.FlashViewModel
 import nz.ac.canterbury.seng303.lab2.viewmodels.FlashRepository
@@ -97,9 +98,9 @@ class MainActivity : ComponentActivity() {
                             composable("FlashCardList") {
                                 FlashCardList(navController, flashRepository)
                             }
-//                            composable("NoteGrid") {
-//                                NoteGrid(navController, flashRepository)
-//                            }
+                            composable("Play") {
+                                PlayQuizScreen(navController, flashRepository)
+                            }
                             composable("CreateFlashCard") {
                                 CreateFlashCard(navController = navController, flashViewModel = flashViewModel, flashRepository = flashRepository)
                             }
@@ -126,8 +127,8 @@ fun Home(navController: NavController) {
         Button(onClick = { navController.navigate("FlashCardList") }) {
             Text("View Flash Cards")
         }
-//        Button(onClick = { navController.navigate("NoteGrid") }) {
-//            Text("Play Flash Cards")
-//        }
+        Button(onClick = { navController.navigate("Play") }) {
+            Text("Play Flash Cards")
+        }
     }
 }
