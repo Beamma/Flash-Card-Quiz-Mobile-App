@@ -3,7 +3,6 @@ package nz.ac.canterbury.seng303.lab2.screens
 import android.app.AlertDialog
 import android.app.SearchManager
 import android.content.Intent
-import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -34,6 +33,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import nz.ac.canterbury.seng303.lab2.models.FlashCard
 import nz.ac.canterbury.seng303.lab2.viewmodels.FlashRepository
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.CardDefaults
 
 @Composable
 fun FlashCardList(navController: NavController, flashRepository: FlashRepository) {
@@ -45,7 +46,6 @@ fun FlashCardList(navController: NavController, flashRepository: FlashRepository
         LazyColumn {
             items(flashCards) { flashCard ->
                 FlashCardItem(navController = navController, flashCard = flashCard, flashRepository = flashRepository)
-                Divider() // Add a divider between items
             }
         }
     }
@@ -54,79 +54,89 @@ fun FlashCardList(navController: NavController, flashRepository: FlashRepository
 @Composable
 fun FlashCardItem(navController: NavController, flashCard: FlashCard, flashRepository: FlashRepository) {
     val context = LocalContext.current
-    Row(
+
+    // ElevatedCard to provide elevation
+    ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
             .clickable { navController.navigate("FlashCard/${flashCard.id}") },
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp), // Adjust elevation as needed
+        shape = MaterialTheme.shapes.medium // You can customize the shape if desired
     ) {
-        // Title Column
-        Column(
-            modifier = Modifier
-                .weight(3f)
-        ) {
-            Text(
-                text = flashCard.title,
-                style = MaterialTheme.typography.headlineSmall,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
-
-        // Action Buttons Row
         Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp), // Inner padding of the card
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.End,
-            modifier = Modifier.weight(1f)
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            IconButton(
-                onClick = {
-                    val query = flashCard.title
-                    if (query.isNotEmpty()) {
-                        val intent = Intent(Intent.ACTION_WEB_SEARCH).apply {
-                            putExtra(SearchManager.QUERY, query)
-                        }
-                        context.startActivity(intent)
-                    } else {
-                        Toast.makeText(context, "Question cannot be empty", Toast.LENGTH_SHORT).show()
-                    }
-                }
+            // Title Column
+            Column(
+                modifier = Modifier
+                    .weight(3f)
             ) {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = "Search"
+                IconButton(
+                    onClick = {
+                        val query = flashCard.title
+                        if (query.isNotEmpty()) {
+                            val intent = Intent(Intent.ACTION_WEB_SEARCH).apply {
+                                putExtra(SearchManager.QUERY, query)
+                            }
+                            context.startActivity(intent)
+                        } else {
+                            Toast.makeText(context, "Question cannot be empty", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "Search"
+                    )
+                }
+                Text(
+                    text = flashCard.title,
+                    style = MaterialTheme.typography.headlineSmall,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
-            IconButton(onClick = {
-                navController.navigate("FlashCard/${flashCard.id}")
-            }) {
-                Icon(
-                    imageVector = Icons.Outlined.Edit,
-                    contentDescription = "Edit",
-                    tint = Color.Blue
-                )
-            }
-            IconButton(onClick = {
-                val builder = AlertDialog.Builder(context)
-                builder.setMessage("Delete note \"${flashCard.title}\"?")
-                    .setCancelable(false)
-                    .setPositiveButton("Delete") { dialog, id ->
-                        flashRepository.deleteNoteById(flashCard.id)
-                        dialog.dismiss()
-                    }
-                    .setNegativeButton("Cancel") { dialog, id ->
-                        dialog.dismiss()
-                    }
-                val alert = builder.create()
-                alert.show()
-            }) {
-                Icon(
-                    imageVector = Icons.Outlined.Delete,
-                    contentDescription = "Delete",
-                    tint = Color.Red
-                )
+
+            // Action Buttons Row
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End,
+                modifier = Modifier.weight(1f)
+            ) {
+                IconButton(onClick = {
+                    navController.navigate("FlashCard/${flashCard.id}")
+                }) {
+                    Icon(
+                        imageVector = Icons.Outlined.Edit,
+                        contentDescription = "Edit",
+                        tint = Color.Blue
+                    )
+                }
+                IconButton(onClick = {
+                    val builder = AlertDialog.Builder(context)
+                    builder.setMessage("Delete note \"${flashCard.title}\"?")
+                        .setCancelable(false)
+                        .setPositiveButton("Delete") { dialog, id ->
+                            flashRepository.deleteNoteById(flashCard.id)
+                            dialog.dismiss()
+                        }
+                        .setNegativeButton("Cancel") { dialog, id ->
+                            dialog.dismiss()
+                        }
+                    val alert = builder.create()
+                    alert.show()
+                }) {
+                    Icon(
+                        imageVector = Icons.Outlined.Delete,
+                        contentDescription = "Delete",
+                        tint = Color.Red
+                    )
+                }
             }
         }
     }
