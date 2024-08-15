@@ -1,5 +1,6 @@
 package nz.ac.canterbury.seng303.lab2.screens
 
+import android.app.AlertDialog
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import nz.ac.canterbury.seng303.lab2.viewmodels.FlashRepository
 import nz.ac.canterbury.seng303.lab2.viewmodels.FlashViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -29,6 +31,7 @@ import nz.ac.canterbury.seng303.lab2.viewmodels.FlashViewModel
 fun CreateFlashCard(
     navController: NavController,
     flashViewModel: FlashViewModel,
+    flashRepository: FlashRepository
 ) {
     val context = LocalContext.current
     Column(
@@ -93,17 +96,17 @@ fun CreateFlashCard(
 
         Button(
             onClick = {
-//                flashViewModel.createNote(createFlashViewModel.title, "")
-//                val builder = AlertDialog.Builder(context)
-//                builder.setMessage("Created note!")
-//                    .setCancelable(false)
-//                    .setPositiveButton("Ok") { dialog, id ->
-//                        createFlashViewModel.updateTitle("")
-//                        navController.navigate("noteList")
-//                    }
-//                    .setNegativeButton("Cancel") { dialog, id -> dialog.dismiss() }
-//                val alert = builder.create()
-//                alert.show()
+                flashRepository.createFlashCard(flashViewModel.title, flashViewModel.answers, flashViewModel.correctAnswerIndex)
+                val builder = AlertDialog.Builder(context)
+                builder.setMessage("Created note!")
+                    .setCancelable(false)
+                    .setPositiveButton("Ok") { dialog, id ->
+                        flashViewModel.updateTitle("")
+                        navController.navigate("Home")
+                    }
+                    .setNegativeButton("Cancel") { dialog, id -> dialog.dismiss() }
+                val alert = builder.create()
+                alert.show()
 
             },
             modifier = Modifier

@@ -103,7 +103,7 @@ class MainActivity : ComponentActivity() {
 //                                NoteGrid(navController, flashRepository)
 //                            }
                             composable("CreateFlashCard") {
-                                CreateFlashCard(navController = navController, flashViewModel = flashViewModel)
+                                CreateFlashCard(navController = navController, flashViewModel = flashViewModel, flashRepository = flashRepository)
                             }
                         }
                     }
