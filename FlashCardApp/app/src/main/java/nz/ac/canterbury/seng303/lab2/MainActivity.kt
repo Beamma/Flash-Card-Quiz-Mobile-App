@@ -28,11 +28,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import nz.ac.canterbury.seng303.lab2.screens.CreateFlashCard
-import nz.ac.canterbury.seng303.lab2.screens.NoteCard
+import nz.ac.canterbury.seng303.lab2.screens.EditNote
 import nz.ac.canterbury.seng303.lab2.screens.NoteGrid
 import nz.ac.canterbury.seng303.lab2.screens.NoteList
 import nz.ac.canterbury.seng303.lab2.ui.theme.Lab1Theme
-import nz.ac.canterbury.seng303.lab2.viewmodels.CreateNoteViewModel
+import nz.ac.canterbury.seng303.lab2.viewmodels.CreateFlashViewModel
 import nz.ac.canterbury.seng303.lab2.viewmodels.EditNoteViewModel
 import nz.ac.canterbury.seng303.lab2.viewmodels.NoteViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel as koinViewModel
@@ -67,20 +67,18 @@ class MainActivity : ComponentActivity() {
                 ) {
 
                     Box(modifier = Modifier.padding(it)) {
-                        val createNoteViewModel: CreateNoteViewModel = viewModel()
+                        val createFlashViewModel: CreateFlashViewModel = viewModel()
                         val editNoteViewModel: EditNoteViewModel = viewModel()
                         NavHost(navController = navController, startDestination = "Home") {
                             composable("Home") {
                                 Home(navController = navController)
                             }
-                            composable(
-                                "NoteCard/{noteId}",
-                                arguments = listOf(navArgument("noteId") {
-                                    type = NavType.StringType
-                                })
+                            composable("EditNote/{noteId}", arguments = listOf(navArgument("noteId") {
+                                type = NavType.StringType
+                            })
                             ) { backStackEntry ->
                                 val noteId = backStackEntry.arguments?.getString("noteId")
-                                noteId?.let { noteIdParam: String -> NoteCard(noteIdParam, noteViewModel) }
+                                noteId?.let { noteIdParam: String -> EditNote(noteIdParam, editNoteViewModel, noteViewModel, navController = navController) }
                             }
                             composable("NoteList") {
                                 NoteList(navController, noteViewModel)
@@ -89,12 +87,12 @@ class MainActivity : ComponentActivity() {
                                 NoteGrid(navController, noteViewModel)
                             }
                             composable("CreateFlashCard") {
-                                CreateFlashCard(navController = navController, title = createNoteViewModel.title,
+                                CreateFlashCard(navController = navController, title = createFlashViewModel.title,
                                     onTitleChange = {newTitle ->
                                             val title = newTitle.replace("badword", "*******")
-                                            createNoteViewModel.updateTitle(title)
+                                        createFlashViewModel.updateTitle(title)
                                     },
-                                    content = createNoteViewModel.content, onContentChange = {newContent -> createNoteViewModel.updateContent(newContent)},
+                                    content = createFlashViewModel.content, onContentChange = {newContent -> createFlashViewModel.updateContent(newContent)},
                                     createNoteFn = {title, content -> noteViewModel.createNote(title, content)}
                                     )
                             }
