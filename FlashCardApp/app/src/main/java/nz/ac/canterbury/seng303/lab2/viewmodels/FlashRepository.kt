@@ -11,21 +11,22 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import nz.ac.canterbury.seng303.lab2.datastore.Storage
 import nz.ac.canterbury.seng303.lab2.models.FlashCard
-import nz.ac.canterbury.seng303.lab2.models.Note
 import kotlin.random.Random
 
 class FlashRepository(
     private val flashStorage: Storage<FlashCard>
 ) : ViewModel() {
 
-    private val _notes = MutableStateFlow<List<FlashCard>>(emptyList())
+    private val _flashCards = MutableStateFlow<List<FlashCard>>(emptyList())
+    val flashCards: StateFlow<List<FlashCard>> get() = _flashCards
+
 
     private val _selectedFlashCard = MutableStateFlow<FlashCard?>(null)
     val selectedFlashCard: StateFlow<FlashCard?> = _selectedFlashCard
 
-    fun getNotes() = viewModelScope.launch {
+    fun getFlashCards() = viewModelScope.launch {
         flashStorage.getAll().catch { Log.e("NOTE_VIEW_MODEL", it.toString()) }
-            .collect { _notes.emit(it) }
+            .collect { _flashCards.emit(it) }
     }
 
 //    fun loadDefaultNotesIfNoneExist() = viewModelScope.launch {
@@ -50,7 +51,7 @@ class FlashRepository(
         flashStorage.insert(flashCard).catch { Log.e("NOTE_VIEW_MODEL", "Could not insert note") }
             .collect()
         flashStorage.getAll().catch { Log.e("NOTE_VIEW_MODEL", it.toString()) }
-            .collect { _notes.emit(it) }
+            .collect { _flashCards.emit(it) }
     }
 
     fun getNoteById(noteId: Int?) = viewModelScope.launch {
@@ -66,7 +67,7 @@ class FlashRepository(
         if (flashCardId != null) {
             flashStorage.delete(flashCardId).collect()
             flashStorage.getAll().catch { Log.e("NOTE_VIEW_MODEL", it.toString()) }
-                .collect { _notes.emit(it) }
+                .collect { _flashCards.emit(it) }
         }
     }
 
@@ -75,7 +76,7 @@ class FlashRepository(
         if (flashCardId != null) {
             flashStorage.edit(flashCardId, flashCard).collect()
             flashStorage.getAll().catch { Log.e("NOTE_VIEW_MODEL", it.toString()) }
-                .collect { _notes.emit(it) }
+                .collect { _flashCards.emit(it) }
         }
     }
 }

@@ -23,18 +23,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import nz.ac.canterbury.seng303.lab2.screens.CreateFlashCard
-//import nz.ac.canterbury.seng303.lab2.screens.NoteCard
-//import nz.ac.canterbury.seng303.lab2.screens.NoteGrid
-//import nz.ac.canterbury.seng303.lab2.screens.NoteList
+import nz.ac.canterbury.seng303.lab2.screens.FlashCardList
 import nz.ac.canterbury.seng303.lab2.ui.theme.Lab1Theme
-import nz.ac.canterbury.seng303.lab2.viewmodels.EditNoteViewModel
 import nz.ac.canterbury.seng303.lab2.viewmodels.FlashViewModel
 import nz.ac.canterbury.seng303.lab2.viewmodels.FlashRepository
 import org.koin.androidx.viewmodel.ext.android.viewModel as koinViewModel
@@ -96,9 +91,9 @@ class MainActivity : ComponentActivity() {
 //                                val noteId = backStackEntry.arguments?.getString("noteId")
 //                                noteId?.let { noteIdParam: String -> EditNote(noteIdParam, editNoteViewModel, flashRepository, navController = navController)}
 //                            }
-//                            composable("NoteList") {
-//                                NoteList(navController, flashRepository)
-//                            }
+                            composable("FlashCardList") {
+                                FlashCardList(navController, flashRepository)
+                            }
 //                            composable("NoteGrid") {
 //                                NoteGrid(navController, flashRepository)
 //                            }
@@ -125,9 +120,9 @@ fun Home(navController: NavController) {
         Button(onClick = { navController.navigate("CreateFlashCard") }) {
             Text("Create Flash Card")
         }
-//        Button(onClick = { navController.navigate("NoteList") }) {
-//            Text("View Flash Cards")
-//        }
+        Button(onClick = { navController.navigate("FlashCardList") }) {
+            Text("View Flash Cards")
+        }
 //        Button(onClick = { navController.navigate("NoteGrid") }) {
 //            Text("Play Flash Cards")
 //        }
