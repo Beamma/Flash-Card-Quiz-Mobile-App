@@ -30,12 +30,12 @@ import androidx.navigation.NavController
 import nz.ac.canterbury.seng303.lab2.R
 import nz.ac.canterbury.seng303.lab2.models.Note
 import nz.ac.canterbury.seng303.lab2.util.convertTimestampToReadableTime
-import nz.ac.canterbury.seng303.lab2.viewmodels.NoteViewModel
+import nz.ac.canterbury.seng303.lab2.viewmodels.FlashRepository
 
 @Composable
-fun NoteGrid(navController: NavController, noteViewModel: NoteViewModel) {
-    noteViewModel.getNotes()
-    val notes: List<Note> by noteViewModel.notes.collectAsState(emptyList())
+fun NoteGrid(navController: NavController, flashRepository: FlashRepository) {
+    flashRepository.getNotes()
+    val notes: List<Note> by flashRepository.notes.collectAsState(emptyList())
     LazyVerticalGrid(
         columns = GridCells.Fixed(2), // Specify the number of columns in the grid
         contentPadding = PaddingValues(4.dp, 8.dp),

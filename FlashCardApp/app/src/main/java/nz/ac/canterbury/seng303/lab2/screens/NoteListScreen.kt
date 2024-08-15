@@ -30,15 +30,15 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import nz.ac.canterbury.seng303.lab2.models.Note
 import nz.ac.canterbury.seng303.lab2.util.convertTimestampToReadableTime
-import nz.ac.canterbury.seng303.lab2.viewmodels.NoteViewModel
+import nz.ac.canterbury.seng303.lab2.viewmodels.FlashRepository
 
 @Composable
-fun NoteList(navController: NavController, noteViewModel: NoteViewModel) {
-    noteViewModel.getNotes()
-    val notes: List<Note> by noteViewModel.notes.collectAsState(emptyList())
+fun NoteList(navController: NavController, flashRepository: FlashRepository) {
+    flashRepository.getNotes()
+    val notes: List<Note> by flashRepository.notes.collectAsState(emptyList())
     LazyColumn {
         items(notes) { note ->
-            NoteItem(navController = navController, note = note, deleteFn = {id: Int -> noteViewModel.deleteNoteById(id) })
+            NoteItem(navController = navController, note = note, deleteFn = {id: Int -> flashRepository.deleteNoteById(id) })
             Divider() // Add a divider between items
         }
     }

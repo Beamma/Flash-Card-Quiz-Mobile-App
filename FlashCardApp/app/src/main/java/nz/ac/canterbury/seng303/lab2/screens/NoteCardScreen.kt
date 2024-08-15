@@ -17,12 +17,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import nz.ac.canterbury.seng303.lab2.models.Note
 import nz.ac.canterbury.seng303.lab2.util.convertTimestampToReadableTime
-import nz.ac.canterbury.seng303.lab2.viewmodels.NoteViewModel
+import nz.ac.canterbury.seng303.lab2.viewmodels.FlashRepository
 
 @Composable
-fun NoteCard(noteId: String, noteViewModel: NoteViewModel) {
-    noteViewModel.getNoteById(noteId = noteId.toIntOrNull())
-    val selectedNoteState by noteViewModel.selectedNote.collectAsState(null)
+fun NoteCard(noteId: String, flashRepository: FlashRepository) {
+    flashRepository.getNoteById(noteId = noteId.toIntOrNull())
+    val selectedNoteState by flashRepository.selectedNote.collectAsState(null)
     val note: Note? = selectedNoteState // we explicitly assign to note to help the compilers smart cast out
     Column(
         modifier = Modifier

@@ -37,12 +37,12 @@ import nz.ac.canterbury.seng303.lab2.screens.NoteList
 import nz.ac.canterbury.seng303.lab2.ui.theme.Lab1Theme
 import nz.ac.canterbury.seng303.lab2.viewmodels.EditNoteViewModel
 import nz.ac.canterbury.seng303.lab2.viewmodels.FlashViewModel
-import nz.ac.canterbury.seng303.lab2.viewmodels.NoteViewModel
+import nz.ac.canterbury.seng303.lab2.viewmodels.FlashRepository
 import org.koin.androidx.viewmodel.ext.android.viewModel as koinViewModel
 
 class MainActivity : ComponentActivity() {
 
-    private val noteViewModel: NoteViewModel by koinViewModel()
+    private val flashRepository: FlashRepository by koinViewModel()
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -88,20 +88,20 @@ class MainActivity : ComponentActivity() {
                                 })
                             ) { backStackEntry ->
                                 val noteId = backStackEntry.arguments?.getString("noteId")
-                                noteId?.let { noteIdParam: String -> NoteCard(noteIdParam, noteViewModel)
+                                noteId?.let { noteIdParam: String -> NoteCard(noteIdParam, flashRepository)
                             }}
                             composable("EditNote/{noteId}", arguments = listOf(navArgument("noteId") {
                                 type = NavType.StringType
                             })
                             ) { backStackEntry ->
                                 val noteId = backStackEntry.arguments?.getString("noteId")
-                                noteId?.let { noteIdParam: String -> EditNote(noteIdParam, editNoteViewModel, noteViewModel, navController = navController)}
+                                noteId?.let { noteIdParam: String -> EditNote(noteIdParam, editNoteViewModel, flashRepository, navController = navController)}
                             }
                             composable("NoteList") {
-                                NoteList(navController, noteViewModel)
+                                NoteList(navController, flashRepository)
                             }
                             composable("NoteGrid") {
-                                NoteGrid(navController, noteViewModel)
+                                NoteGrid(navController, flashRepository)
                             }
                             composable("CreateFlashCard") {
                                 CreateFlashCard(navController = navController, flashViewModel = flashViewModel)

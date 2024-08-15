@@ -13,7 +13,7 @@ import nz.ac.canterbury.seng303.lab2.datastore.Storage
 import nz.ac.canterbury.seng303.lab2.models.Note
 import kotlin.random.Random
 
-class NoteViewModel(
+class FlashRepository(
     private val noteStorage: Storage<Note>
 ) : ViewModel() {
 

@@ -26,23 +26,23 @@ import androidx.navigation.NavController
 import nz.ac.canterbury.seng303.lab2.models.Note
 import nz.ac.canterbury.seng303.lab2.util.convertTimestampToReadableTime
 import nz.ac.canterbury.seng303.lab2.viewmodels.EditNoteViewModel
-import nz.ac.canterbury.seng303.lab2.viewmodels.NoteViewModel
+import nz.ac.canterbury.seng303.lab2.viewmodels.FlashRepository
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditNote(
     noteId: String,
     editNoteViewModel: EditNoteViewModel,
-    noteViewModel: NoteViewModel,
+    flashRepository: FlashRepository,
     navController: NavController
 ) {
     val context = LocalContext.current
-    val selectedNoteState by noteViewModel.selectedNote.collectAsState(null)
+    val selectedNoteState by flashRepository.selectedNote.collectAsState(null)
     val note: Note? = selectedNoteState // we explicitly assign to note to help the compilers smart cast out
 
     LaunchedEffect(note) {  // Get the default values for the note properties
         if (note == null) {
-            noteViewModel.getNoteById(noteId.toIntOrNull())
+            flashRepository.getNoteById(noteId.toIntOrNull())
         } else {
             editNoteViewModel.setDefaultValues(note)
         }
@@ -97,7 +97,7 @@ fun EditNote(
         }
         Button(
             onClick = {
-                noteViewModel.editNoteById(noteId.toIntOrNull(), note = Note(noteId.toInt(), editNoteViewModel.title, editNoteViewModel.content, editNoteViewModel.timestamp, editNoteViewModel.isArchived))
+                flashRepository.editNoteById(noteId.toIntOrNull(), note = Note(noteId.toInt(), editNoteViewModel.title, editNoteViewModel.content, editNoteViewModel.timestamp, editNoteViewModel.isArchived))
                 val builder = AlertDialog.Builder(context)
                 builder.setMessage("Edited note!")
                     .setCancelable(false)
