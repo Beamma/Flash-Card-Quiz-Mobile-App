@@ -18,6 +18,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -25,10 +26,12 @@ import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import nz.ac.canterbury.seng303.lab2.screens.CreateFlashCard
 import nz.ac.canterbury.seng303.lab2.screens.EditNote
+import nz.ac.canterbury.seng303.lab2.screens.NoteCard
 import nz.ac.canterbury.seng303.lab2.screens.NoteGrid
 import nz.ac.canterbury.seng303.lab2.screens.NoteList
 import nz.ac.canterbury.seng303.lab2.ui.theme.Lab1Theme
@@ -49,18 +52,23 @@ class MainActivity : ComponentActivity() {
         setContent {
             Lab1Theme {
                 val navController = rememberNavController()
+                val currentBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentDestination = currentBackStackEntry?.destination
                 Scaffold(
                     topBar = {
-                        // Add your AppBar content here
                         TopAppBar(
-                            title = { Text("SENG303 Lab 2") },
-                            navigationIcon = {
-                                IconButton(onClick = { navController.popBackStack() }) {
-                                    Icon(
-                                        imageVector = Icons.Default.ArrowBack,
-                                        contentDescription = "Back"
-                                    )
+                            title = { Text("Joels Flash Card App") },
+                            navigationIcon = if (currentDestination?.route != "Home") {
+                                {
+                                    IconButton(onClick = { navController.popBackStack() }) {
+                                        Icon(
+                                            imageVector = Icons.Default.ArrowBack,
+                                            contentDescription = "Back"
+                                        )
+                                    }
                                 }
+                            } else {
+                                {}
                             }
                         )
                     }
@@ -73,12 +81,21 @@ class MainActivity : ComponentActivity() {
                             composable("Home") {
                                 Home(navController = navController)
                             }
+                            composable(
+                                "NoteCard/{noteId}",
+                                arguments = listOf(navArgument("noteId") {
+                                    type = NavType.StringType
+                                })
+                            ) { backStackEntry ->
+                                val noteId = backStackEntry.arguments?.getString("noteId")
+                                noteId?.let { noteIdParam: String -> NoteCard(noteIdParam, noteViewModel)
+                            }}
                             composable("EditNote/{noteId}", arguments = listOf(navArgument("noteId") {
                                 type = NavType.StringType
                             })
                             ) { backStackEntry ->
                                 val noteId = backStackEntry.arguments?.getString("noteId")
-                                noteId?.let { noteIdParam: String -> EditNote(noteIdParam, editNoteViewModel, noteViewModel, navController = navController) }
+                                noteId?.let { noteIdParam: String -> EditNote(noteIdParam, editNoteViewModel, noteViewModel, navController = navController)}
                             }
                             composable("NoteList") {
                                 NoteList(navController, noteViewModel)
