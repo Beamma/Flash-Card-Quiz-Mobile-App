@@ -20,7 +20,7 @@ class CreateFlashViewModel : ViewModel() {
         content = newContent
     }
 
-    var answers by mutableStateOf(listOf<String>())
+    var answers by mutableStateOf(listOf("", ""))
         private set
 
     fun updateAnswers(newContent: String, index: Int) {
@@ -38,5 +38,17 @@ class CreateFlashViewModel : ViewModel() {
 
     fun setCorrectAnswer(index: Int) {
         correctAnswerIndex = index
+    }
+
+    fun removeAnswer(index: Int) {
+        answers = answers.toMutableList().also {
+            it.removeAt(index)
+        }
+        // Adjust correctAnswerIndex if needed
+        if (correctAnswerIndex == index) {
+            correctAnswerIndex = -1
+        } else if (correctAnswerIndex > index) {
+            correctAnswerIndex--
+        }
     }
 }

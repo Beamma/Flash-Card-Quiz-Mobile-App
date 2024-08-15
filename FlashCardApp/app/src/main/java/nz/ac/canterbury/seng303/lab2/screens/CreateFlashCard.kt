@@ -11,8 +11,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
@@ -56,6 +60,19 @@ fun CreateFlashCard(
                     .fillMaxWidth()
                     .padding(bottom = 8.dp)
             ) {
+                if (createFlashViewModel.answers.size > 2) {
+                    IconButton(
+                        onClick = {
+                            createFlashViewModel.removeAnswer(index)
+                        },
+                        modifier = Modifier.padding(start = 8.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = "Remove Answer"
+                        )
+                    }
+                }
                 OutlinedTextField(
                     value = answer,
                     onValueChange = { createFlashViewModel.updateAnswers(it, index) },
