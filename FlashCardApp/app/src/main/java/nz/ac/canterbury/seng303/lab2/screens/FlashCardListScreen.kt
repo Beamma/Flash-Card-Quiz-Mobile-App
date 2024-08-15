@@ -8,8 +8,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -55,14 +57,13 @@ fun FlashCardList(navController: NavController, flashRepository: FlashRepository
 fun FlashCardItem(navController: NavController, flashCard: FlashCard, flashRepository: FlashRepository) {
     val context = LocalContext.current
 
-    // ElevatedCard to provide elevation
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
             .clickable { navController.navigate("FlashCard/${flashCard.id}") },
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp), // Adjust elevation as needed
-        shape = MaterialTheme.shapes.medium // You can customize the shape if desired
+        shape = MaterialTheme.shapes.medium // Customize the shape if desired
     ) {
         Row(
             modifier = Modifier
@@ -71,10 +72,11 @@ fun FlashCardItem(navController: NavController, flashCard: FlashCard, flashRepos
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            // Title Column
-            Column(
-                modifier = Modifier
-                    .weight(3f)
+            // Row to include search icon and title
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start,
+                modifier = Modifier.weight(3f)
             ) {
                 IconButton(
                     onClick = {
@@ -94,6 +96,7 @@ fun FlashCardItem(navController: NavController, flashCard: FlashCard, flashRepos
                         contentDescription = "Search"
                     )
                 }
+                Spacer(modifier = Modifier.width(8.dp)) // Add some space between icon and text
                 Text(
                     text = flashCard.title,
                     style = MaterialTheme.typography.headlineSmall,
