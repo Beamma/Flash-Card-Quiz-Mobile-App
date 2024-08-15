@@ -15,16 +15,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import nz.ac.canterbury.seng303.lab2.viewmodels.CreateFlashViewModel
+import nz.ac.canterbury.seng303.lab2.viewmodels.NoteViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateFlashCard(
     navController: NavController,
-    title: String,
-    onTitleChange: (String) -> Unit,
-    content: String,
-    onContentChange: (String) -> Unit,
-    createNoteFn: (String, String) -> Unit
+    createFlashViewModel: CreateFlashViewModel,
+    flashViewModel: NoteViewModel
 ) {
     val context = LocalContext.current
     Column(
@@ -33,16 +32,16 @@ fun CreateFlashCard(
             .padding(16.dp)
     ) {
         OutlinedTextField(
-            value = title,
-            onValueChange = { onTitleChange(it) },
+            value = createFlashViewModel.title,
+            onValueChange = { createFlashViewModel.updateTitle(it) },
             label = { Text("Title") },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 8.dp)
         )
         OutlinedTextField(
-            value = content,
-            onValueChange = { onContentChange(it) },
+            value = createFlashViewModel.content,
+            onValueChange = { createFlashViewModel.updateContent(it) },
             label = { Text("Content") },
             modifier = Modifier
                 .fillMaxWidth()
@@ -52,13 +51,13 @@ fun CreateFlashCard(
         )
         Button(
             onClick = {
-                createNoteFn(title, content)
+                flashViewModel.createNote(createFlashViewModel.title, createFlashViewModel.content)
                 val builder = AlertDialog.Builder(context)
                 builder.setMessage("Created note!")
                     .setCancelable(false)
                     .setPositiveButton("Ok") { dialog, id ->
-                        onTitleChange("")
-                        onContentChange("")
+                        createFlashViewModel.updateTitle("")
+                        createFlashViewModel.updateContent("")
                         navController.navigate("noteList")
                     }
                     .setNegativeButton("Cancel") { dialog, id -> dialog.dismiss() }

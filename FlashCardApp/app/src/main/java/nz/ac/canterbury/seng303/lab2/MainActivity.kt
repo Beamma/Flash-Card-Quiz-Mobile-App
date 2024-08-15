@@ -104,14 +104,7 @@ class MainActivity : ComponentActivity() {
                                 NoteGrid(navController, noteViewModel)
                             }
                             composable("CreateFlashCard") {
-                                CreateFlashCard(navController = navController, title = createFlashViewModel.title,
-                                    onTitleChange = {newTitle ->
-                                            val title = newTitle.replace("badword", "*******")
-                                        createFlashViewModel.updateTitle(title)
-                                    },
-                                    content = createFlashViewModel.content, onContentChange = {newContent -> createFlashViewModel.updateContent(newContent)},
-                                    createNoteFn = {title, content -> noteViewModel.createNote(title, content)}
-                                    )
+                                CreateFlashCard(navController = navController, createFlashViewModel = createFlashViewModel, flashViewModel = noteViewModel)
                             }
                         }
                     }
