@@ -15,8 +15,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -36,6 +38,7 @@ import nz.ac.canterbury.seng303.lab2.screens.PlayQuizScreen
 import nz.ac.canterbury.seng303.lab2.ui.theme.Lab1Theme
 import nz.ac.canterbury.seng303.lab2.viewmodels.FlashViewModel
 import nz.ac.canterbury.seng303.lab2.viewmodels.FlashRepository
+import androidx.compose.ui.graphics.Color
 import org.koin.androidx.viewmodel.ext.android.viewModel as koinViewModel
 
 class MainActivity : ComponentActivity() {
@@ -67,7 +70,12 @@ class MainActivity : ComponentActivity() {
                                 }
                             } else {
                                 {}
-                            }
+                            },
+                            colors = TopAppBarDefaults.smallTopAppBarColors(
+                                containerColor = Color.Red, // Background color for the TopAppBar
+                                titleContentColor = Color.White, // Title text color
+                                navigationIconContentColor = Color.White // Icon color
+                            )
                         )
                     }
                 ) {
