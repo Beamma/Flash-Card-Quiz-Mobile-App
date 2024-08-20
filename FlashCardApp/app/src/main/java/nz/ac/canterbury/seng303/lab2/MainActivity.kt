@@ -42,12 +42,14 @@ import nz.ac.canterbury.seng303.lab2.viewmodels.FlashRepository
 import androidx.compose.ui.graphics.Color
 import org.koin.androidx.viewmodel.ext.android.viewModel as koinViewModel
 import androidx.compose.foundation.layout.*
-import androidx.compose.ui.draw.shadow
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.Lightbulb
 
 class MainActivity : ComponentActivity() {
 
@@ -154,7 +156,17 @@ fun Home(navController: NavController) {
                     .fillMaxWidth()
                     .height(60.dp)
             ) {
-                Text("Create Flash Card", style = TextStyle(fontSize = 20.sp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text("Create Flash Card", style = TextStyle(fontSize = 20.sp))
+                    Icon(
+                        imageVector = Icons.Filled.Add,
+                        contentDescription = "Add",
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
             }
 
             Button(
@@ -163,7 +175,18 @@ fun Home(navController: NavController) {
                     .fillMaxWidth()
                     .height(60.dp)
             ) {
-                Text("View Flash Cards", style = TextStyle(fontSize = 20.sp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text("View Flash Cards", style = TextStyle(fontSize = 20.sp))
+                    Icon(
+                        imageVector = Icons.Filled.Visibility,
+                        contentDescription = "View",
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+
             }
 
             Button(
@@ -172,7 +195,17 @@ fun Home(navController: NavController) {
                     .fillMaxWidth()
                     .height(60.dp)
             ) {
-                Text("Play Flash Cards", style = TextStyle(fontSize = 20.sp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text("Play Flash Cards", style = TextStyle(fontSize = 20.sp))
+                    Icon(
+                        imageVector = Icons.Filled.Lightbulb,
+                        contentDescription = "View",
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
             }
         }
     }
