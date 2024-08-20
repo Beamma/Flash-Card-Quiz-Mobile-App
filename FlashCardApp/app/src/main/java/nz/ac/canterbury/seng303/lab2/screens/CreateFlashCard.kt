@@ -28,10 +28,6 @@ import nz.ac.canterbury.seng303.lab2.viewmodels.FlashRepository
 import nz.ac.canterbury.seng303.lab2.viewmodels.FlashViewModel
 import androidx.compose.foundation.layout.*
 
-
-
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateFlashCard(
@@ -115,8 +111,9 @@ fun CreateFlashCard(
 
             Button(
                 onClick = {
+                    val hasEmptyAnswer = flashViewModel.answers.any { it.trim().isEmpty() }
                     when {
-                        flashViewModel.title.isEmpty() -> {
+                        flashViewModel.title.trim().isEmpty() -> {
                             Toast.makeText(context, "Question cannot be empty", Toast.LENGTH_SHORT).show()
                         }
                         flashViewModel.answers.isEmpty() -> {
@@ -128,16 +125,22 @@ fun CreateFlashCard(
                         flashViewModel.answers.contains("") -> {
                             Toast.makeText(context, "Please ensure that you have text in all inputs", Toast.LENGTH_SHORT).show()
                         }
+                        hasEmptyAnswer -> {
+                            Toast.makeText(context, "Please ensure that you have text in all inputs", Toast.LENGTH_SHORT).show()
+                        }
                         else -> {
                             flashRepository.createFlashCard(flashViewModel.title, flashViewModel.answers, flashViewModel.correctAnswerIndex)
                             val builder = AlertDialog.Builder(context)
-                            builder.setMessage("Created note!")
+                            builder.setMessage("Successfully Created note!")
                                 .setCancelable(false)
-                                .setPositiveButton("Ok") { dialog, id ->
+                                .setPositiveButton("Home") { dialog, id ->
                                     flashViewModel.resetViewModel()
-                                    navController.navigate("FlashCardList")
+                                    navController.navigate("Home")
                                 }
-                                .setNegativeButton("Cancel") { dialog, id -> dialog.dismiss() }
+                                .setNegativeButton("Close") { dialog, id ->
+                                    flashViewModel.resetViewModel()
+                                    dialog.dismiss()
+                                }
                             val alert = builder.create()
                             alert.show()
                         }
