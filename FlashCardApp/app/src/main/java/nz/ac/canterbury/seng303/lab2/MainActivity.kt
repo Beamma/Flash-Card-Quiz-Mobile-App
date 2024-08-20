@@ -1,5 +1,6 @@
 package nz.ac.canterbury.seng303.lab2
 
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -50,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.Lightbulb
+import androidx.compose.ui.platform.LocalConfiguration
 
 class MainActivity : ComponentActivity() {
 
@@ -133,6 +135,8 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Home(navController: NavController) {
+    val configuration = LocalConfiguration.current
+    val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -143,13 +147,14 @@ fun Home(navController: NavController) {
             verticalArrangement = Arrangement.spacedBy(12.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                contentDescription = "App Icon",
-                modifier = Modifier.size(200.dp),
-                colorFilter = ColorFilter.tint(Color.Red)
-            )
-            // App Icon
+            if (isPortrait) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                    contentDescription = "App Icon",
+                    modifier = Modifier.size(200.dp),
+                    colorFilter = ColorFilter.tint(Color.Red)
+                )
+            }
             Button(
                 onClick = { navController.navigate("CreateFlashCard") },
                 modifier = Modifier
