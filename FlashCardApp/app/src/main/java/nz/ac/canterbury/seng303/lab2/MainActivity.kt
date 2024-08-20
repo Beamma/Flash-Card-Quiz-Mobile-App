@@ -64,7 +64,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     topBar = {
                         TopAppBar(
-                            title = { Text("Joels Flash Card App") },
+                            title = { Text("Flash Card Frenzy") },
                             navigationIcon = if (currentDestination?.route != "Home") {
                                 {
                                     IconButton(onClick = { navController.popBackStack() }) {

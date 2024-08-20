@@ -9,15 +9,20 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,13 +42,50 @@ import nz.ac.canterbury.seng303.lab2.models.FlashCard
 import nz.ac.canterbury.seng303.lab2.viewmodels.FlashRepository
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.CardDefaults
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun FlashCardList(navController: NavController, flashRepository: FlashRepository) {
     flashRepository.getFlashCards()
     val flashCards: List<FlashCard> by flashRepository.flashCards.collectAsState(emptyList())
     if (flashCards.isEmpty()) {
-        Text(text = "No Flash Cards Try Creating One")
+        val padding = 16.dp
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = "No Flash Cards Try Creating One",
+                style = TextStyle(
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
+                ),
+                modifier = Modifier.padding(bottom = padding)
+            )
+            Button(
+                onClick = { navController.navigate("CreateFlashCard") },
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text("Create Flash Card")
+                    Icon(
+                        imageVector = Icons.Filled.Add,
+                        contentDescription = "Add",
+                        modifier = Modifier.size(16.dp)
+                    )
+                }
+            }
+        }
     } else {
         LazyColumn {
             items(flashCards) { flashCard ->
