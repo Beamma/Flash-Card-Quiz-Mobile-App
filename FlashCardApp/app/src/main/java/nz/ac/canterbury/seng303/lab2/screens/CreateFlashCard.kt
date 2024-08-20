@@ -109,6 +109,9 @@ fun CreateFlashCard(
                     flashViewModel.correctAnswerIndex == -1 -> {
                         Toast.makeText(context, "Please select at least one correct answer", Toast.LENGTH_SHORT).show()
                     }
+                    flashViewModel.answers.contains("") -> {
+                        Toast.makeText(context, "Please ensure that you have text in all inputs", Toast.LENGTH_SHORT).show()
+                    }
                     else -> {
                         flashRepository.createFlashCard(flashViewModel.title, flashViewModel.answers, flashViewModel.correctAnswerIndex)
                         val builder = AlertDialog.Builder(context)
