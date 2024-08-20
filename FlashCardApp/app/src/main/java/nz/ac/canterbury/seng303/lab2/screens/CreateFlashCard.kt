@@ -42,12 +42,13 @@ fun CreateFlashCard(
     val context = LocalContext.current
 
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
             OutlinedTextField(
@@ -99,7 +100,7 @@ fun CreateFlashCard(
             }
 
             // Button to add more answer fields
-            if (flashViewModel.answers.size <= 8) {
+            if (flashViewModel.answers.size < 8) {
                 Button(
                     onClick = { flashViewModel.addAnswers("") },
                     modifier = Modifier
@@ -110,16 +111,8 @@ fun CreateFlashCard(
                 }
             }
 
-            Spacer(modifier = Modifier.weight(1f)) // Pushes the buttons to the bottom
+            Spacer(modifier = Modifier.weight(1f)) // Spacer to push the Save button to the bottom
 
-        }
-
-        // Buttons positioned at the bottom of the screen
-        Column(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(16.dp)
-        ) {
             Button(
                 onClick = {
                     when {
@@ -150,7 +143,8 @@ fun CreateFlashCard(
                         }
                     }
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
             ) {
                 Text(text = "Save")
             }
