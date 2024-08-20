@@ -3,10 +3,12 @@ package nz.ac.canterbury.seng303.lab2
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -15,7 +17,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -40,6 +41,13 @@ import nz.ac.canterbury.seng303.lab2.viewmodels.FlashViewModel
 import nz.ac.canterbury.seng303.lab2.viewmodels.FlashRepository
 import androidx.compose.ui.graphics.Color
 import org.koin.androidx.viewmodel.ext.android.viewModel as koinViewModel
+import androidx.compose.foundation.layout.*
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 class MainActivity : ComponentActivity() {
 
@@ -123,20 +131,49 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Home(navController: NavController) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(20.dp),
+        contentAlignment = Alignment.Center
     ) {
-        Text("Welcome to Flash Card App")
-        Button(onClick = { navController.navigate("CreateFlashCard") }) {
-            Text("Create Flash Card")
-        }
-        Button(onClick = { navController.navigate("FlashCardList") }) {
-            Text("View Flash Cards")
-        }
-        Button(onClick = { navController.navigate("Play") }) {
-            Text("Play Flash Cards")
+        Column(
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                contentDescription = "App Icon",
+                modifier = Modifier.size(200.dp),
+                colorFilter = ColorFilter.tint(Color.Red)
+            )
+            // App Icon
+            Button(
+                onClick = { navController.navigate("CreateFlashCard") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(60.dp)
+            ) {
+                Text("Create Flash Card", style = TextStyle(fontSize = 20.sp))
+            }
+
+            Button(
+                onClick = { navController.navigate("FlashCardList") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(60.dp)
+            ) {
+                Text("View Flash Cards", style = TextStyle(fontSize = 20.sp))
+            }
+
+            Button(
+                onClick = { navController.navigate("Play") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(60.dp)
+            ) {
+                Text("Play Flash Cards", style = TextStyle(fontSize = 20.sp))
+            }
         }
     }
 }
