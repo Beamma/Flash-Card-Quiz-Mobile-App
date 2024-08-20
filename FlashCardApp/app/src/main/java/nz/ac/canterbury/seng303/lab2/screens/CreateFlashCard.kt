@@ -26,6 +26,11 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import nz.ac.canterbury.seng303.lab2.viewmodels.FlashRepository
 import nz.ac.canterbury.seng303.lab2.viewmodels.FlashViewModel
+import androidx.compose.foundation.layout.*
+
+
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,102 +40,120 @@ fun CreateFlashCard(
     flashRepository: FlashRepository
 ) {
     val context = LocalContext.current
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState())
-    ) {
-        OutlinedTextField(
-            value = flashViewModel.title,
-            onValueChange = { flashViewModel.updateTitle(it) },
-            label = { Text("Question") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 8.dp)
-        )
 
-        // Display answer fields
-        flashViewModel.answers.forEachIndexed { index, answer ->
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
+            OutlinedTextField(
+                value = flashViewModel.title,
+                onValueChange = { flashViewModel.updateTitle(it) },
+                label = { Text("Question") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp)
-            ) {
-                OutlinedTextField(
-                    value = answer,
-                    onValueChange = { flashViewModel.updateAnswers(it, index) },
-                    label = { Text("Answer ${index + 1}") },
+            )
+
+            // Display answer fields
+            flashViewModel.answers.forEachIndexed { index, answer ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(1f)
-                        .padding(start = 8.dp)
-                )
-                Checkbox(
-                    checked = flashViewModel.isCorrectAnswer(index),
-                    onCheckedChange = { isChecked ->
-                        flashViewModel.setCorrectAnswer(index)
-                    }
-                )
-                if (flashViewModel.answers.size > 2) {
-                    IconButton(
-                        onClick = {
-                            flashViewModel.removeAnswer(index)
-                        },
-                        modifier = Modifier.padding(start = 8.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Close,
-                            contentDescription = "Remove Answer"
-                        )
+                        .padding(bottom = 8.dp)
+                ) {
+                    OutlinedTextField(
+                        value = answer,
+                        onValueChange = { flashViewModel.updateAnswers(it, index) },
+                        label = { Text("Answer ${index + 1}") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                            .padding(start = 8.dp)
+                    )
+                    Checkbox(
+                        checked = flashViewModel.isCorrectAnswer(index),
+                        onCheckedChange = { isChecked ->
+                            flashViewModel.setCorrectAnswer(index)
+                        }
+                    )
+                    if (flashViewModel.answers.size > 2) {
+                        IconButton(
+                            onClick = {
+                                flashViewModel.removeAnswer(index)
+                            },
+                            modifier = Modifier.padding(start = 8.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = "Remove Answer"
+                            )
+                        }
                     }
                 }
             }
-        }
 
-        // Button to add more answer fields
-        Button(
-            onClick = { flashViewModel.addAnswers("") },
-            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
-        ) {
-            Text("Add Answer Field")
-        }
-
-        Button(
-            onClick = {
-                when {
-                    flashViewModel.title.isEmpty() -> {
-                        Toast.makeText(context, "Question cannot be empty", Toast.LENGTH_SHORT).show()
-                    }
-                    flashViewModel.answers.isEmpty() -> {
-                        Toast.makeText(context, "All answers must be filled", Toast.LENGTH_SHORT).show()
-                    }
-                    flashViewModel.correctAnswerIndex == -1 -> {
-                        Toast.makeText(context, "Please select at least one correct answer", Toast.LENGTH_SHORT).show()
-                    }
-                    flashViewModel.answers.contains("") -> {
-                        Toast.makeText(context, "Please ensure that you have text in all inputs", Toast.LENGTH_SHORT).show()
-                    }
-                    else -> {
-                        flashRepository.createFlashCard(flashViewModel.title, flashViewModel.answers, flashViewModel.correctAnswerIndex)
-                        val builder = AlertDialog.Builder(context)
-                        builder.setMessage("Created note!")
-                            .setCancelable(false)
-                            .setPositiveButton("Ok") { dialog, id ->
-                                flashViewModel.resetViewModel()
-                                navController.navigate("FlashCardList")
-                            }
-                            .setNegativeButton("Cancel") { dialog, id -> dialog.dismiss() }
-                        val alert = builder.create()
-                        alert.show()
-                    }
+            // Button to add more answer fields
+            if (flashViewModel.answers.size <= 8) {
+                Button(
+                    onClick = { flashViewModel.addAnswers("") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                ) {
+                    Text("Add Answer Field")
                 }
-            },
+            }
+
+            Spacer(modifier = Modifier.weight(1f)) // Pushes the buttons to the bottom
+
+        }
+
+        // Buttons positioned at the bottom of the screen
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
+                .align(Alignment.BottomCenter)
+                .padding(16.dp)
         ) {
-            Text(text = "Save")
+            Button(
+                onClick = {
+                    when {
+                        flashViewModel.title.isEmpty() -> {
+                            Toast.makeText(context, "Question cannot be empty", Toast.LENGTH_SHORT).show()
+                        }
+                        flashViewModel.answers.isEmpty() -> {
+                            Toast.makeText(context, "All answers must be filled", Toast.LENGTH_SHORT).show()
+                        }
+                        flashViewModel.correctAnswerIndex == -1 -> {
+                            Toast.makeText(context, "Please select at least one correct answer", Toast.LENGTH_SHORT).show()
+                        }
+                        flashViewModel.answers.contains("") -> {
+                            Toast.makeText(context, "Please ensure that you have text in all inputs", Toast.LENGTH_SHORT).show()
+                        }
+                        else -> {
+                            flashRepository.createFlashCard(flashViewModel.title, flashViewModel.answers, flashViewModel.correctAnswerIndex)
+                            val builder = AlertDialog.Builder(context)
+                            builder.setMessage("Created note!")
+                                .setCancelable(false)
+                                .setPositiveButton("Ok") { dialog, id ->
+                                    flashViewModel.resetViewModel()
+                                    navController.navigate("FlashCardList")
+                                }
+                                .setNegativeButton("Cancel") { dialog, id -> dialog.dismiss() }
+                            val alert = builder.create()
+                            alert.show()
+                        }
+                    }
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(text = "Save")
+            }
         }
     }
 }
