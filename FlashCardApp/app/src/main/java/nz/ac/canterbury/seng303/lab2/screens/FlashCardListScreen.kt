@@ -6,15 +6,13 @@ import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -23,7 +21,6 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -87,9 +84,30 @@ fun FlashCardList(navController: NavController, flashRepository: FlashRepository
             }
         }
     } else {
-        LazyColumn {
-            items(flashCards) { flashCard ->
-                FlashCardItem(navController = navController, flashCard = flashCard, flashRepository = flashRepository)
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                items(flashCards) { flashCard ->
+                    FlashCardItem(navController = navController, flashCard = flashCard, flashRepository = flashRepository)
+                }
+
+                item {
+                    Button(
+                        onClick = {
+                            navController.navigate("CreateFlashCard") // Navigate to create flash card screen
+                        },
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter) // Center horizontally and align to the bottom
+                            .padding(16.dp) // Padding around the button
+                            .fillMaxWidth() // Make the button fill the width
+                            .padding(horizontal = 16.dp) // Horizontal padding to ensure it's not touching the screen edges
+                    ) {
+                        Text(text = "Create New Flash Card")
+                    }
+                }
             }
         }
     }
@@ -117,6 +135,22 @@ fun FlashCardItem(navController: NavController, flashCard: FlashCard, flashRepos
                 horizontalArrangement = Arrangement.Start,
                 modifier = Modifier.fillMaxWidth()
             ) {
+                Text(
+                    text = flashCard.title,
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier.weight(1f),
+                    maxLines = 4,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+
+//            Spacer(modifier = Modifier.height(8.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 IconButton(
                     onClick = {
                         val query = flashCard.title
@@ -132,33 +166,17 @@ fun FlashCardItem(navController: NavController, flashCard: FlashCard, flashRepos
                 ) {
                     Icon(
                         imageVector = Icons.Default.Search,
-                        contentDescription = "Search"
+                        contentDescription = "Search",
+                        tint = Color.Blue
                     )
                 }
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = flashCard.title,
-                    style = MaterialTheme.typography.headlineSmall,
-                    modifier = Modifier.weight(1f),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-
-//            Spacer(modifier = Modifier.height(8.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
                 IconButton(onClick = {
                     navController.navigate("FlashCard/${flashCard.id}")
                 }) {
                     Icon(
                         imageVector = Icons.Outlined.Edit,
                         contentDescription = "Edit",
-                        tint = Color.Blue
+                        tint = Color.Black
                     )
                 }
 //                Spacer(modifier = Modifier.width(16.dp))
