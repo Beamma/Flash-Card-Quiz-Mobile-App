@@ -107,18 +107,15 @@ fun FlashCardItem(navController: NavController, flashCard: FlashCard, flashRepos
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp), // Adjust elevation as needed
         shape = MaterialTheme.shapes.medium // Customize the shape if desired
     ) {
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp), // Inner padding of the card
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+                .padding(16.dp)
         ) {
-            // Row to include search icon and title
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start,
-                modifier = Modifier.weight(3f)
+                modifier = Modifier.fillMaxWidth()
             ) {
                 IconButton(
                     onClick = {
@@ -138,20 +135,22 @@ fun FlashCardItem(navController: NavController, flashCard: FlashCard, flashRepos
                         contentDescription = "Search"
                     )
                 }
-                Spacer(modifier = Modifier.width(8.dp)) // Add some space between icon and text
+                Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = flashCard.title,
                     style = MaterialTheme.typography.headlineSmall,
-                    maxLines = 1,
+                    modifier = Modifier.weight(1f),
+                    maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
             }
 
-            // Action Buttons Row
+//            Spacer(modifier = Modifier.height(8.dp))
+
             Row(
-                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End,
-                modifier = Modifier.weight(1f)
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(onClick = {
                     navController.navigate("FlashCard/${flashCard.id}")
@@ -162,6 +161,7 @@ fun FlashCardItem(navController: NavController, flashCard: FlashCard, flashRepos
                         tint = Color.Blue
                     )
                 }
+//                Spacer(modifier = Modifier.width(16.dp))
                 IconButton(onClick = {
                     val builder = AlertDialog.Builder(context)
                     builder.setMessage("Delete note \"${flashCard.title}\"?")
