@@ -88,7 +88,7 @@ fun PlayQuizScreen(navController: NavController, quizViewModel: QuizViewModel = 
                             containerColor = when {
                                 selectedAnswer == answer && isAnswerCorrect == true -> Color.Green
                                 selectedAnswer == answer && isAnswerCorrect == false -> Color.Red
-                                else -> Color.Gray
+                                else -> Color.DarkGray
                             }
                         )
                     ) {
@@ -98,6 +98,11 @@ fun PlayQuizScreen(navController: NavController, quizViewModel: QuizViewModel = 
                 }
             }
         }
+        Button(
+            onClick = {
+                quizViewModel.onSubmit()
+            },
+        )
     } else {
         // Display the summary of the user's performance
         val correctAnswers = userAnswers.count { it.second }

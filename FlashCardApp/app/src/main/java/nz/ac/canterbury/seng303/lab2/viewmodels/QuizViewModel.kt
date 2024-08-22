@@ -49,6 +49,12 @@ class QuizViewModel(private val flashRepository: FlashRepository) : ViewModel() 
     // Handle answer selection
     fun onAnswerSelected(answer: String, correctAnswerIndex: Int, index: Int, question: String) {
         _selectedAnswer.value = answer
+        _correctAnswerIndex.value = correctAnswerIndex
+        _index.value = index
+        _question.value = question
+    }
+
+    fun onSubmit() {
         val isCorrect = (index == correctAnswerIndex)
         _isAnswerCorrect.value = isCorrect
         _userAnswers.value.add(answer to isCorrect)
