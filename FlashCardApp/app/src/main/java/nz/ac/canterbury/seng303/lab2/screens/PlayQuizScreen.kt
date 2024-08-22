@@ -33,12 +33,7 @@ fun PlayQuizScreen(navController: NavController, quizViewModel: QuizViewModel = 
 
     // Display the current flashcard or the summary
     if (!showSummary) {
-        Text(text = "Playing")
         val currentFlashcard = flashCards.getOrNull(currentIndex)
-        Log.v("JOELS", currentFlashcard.toString())
-        Log.v("JOELS", currentIndex.toString())
-        Log.v("JOELS", flashCards.toString())
-        Log.v("JOELS", showSummary.toString())
         currentFlashcard?.let {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(text = it.title)
