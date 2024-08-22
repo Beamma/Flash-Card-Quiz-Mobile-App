@@ -16,8 +16,17 @@ class QuizViewModel(private val flashRepository: FlashRepository) : ViewModel() 
     private val _currentIndex = MutableStateFlow(0)
     val currentIndex: StateFlow<Int> = _currentIndex
 
+    private val _index = MutableStateFlow(-1)
+    val index: StateFlow<Int> = _index
+
+    private val _correctAnswerIndex = MutableStateFlow<Int?>(null)
+    val correctAnswerIndex: StateFlow<Int?> = _correctAnswerIndex
+
     private val _selectedAnswer = MutableStateFlow<String?>(null)
     val selectedAnswer: StateFlow<String?> = _selectedAnswer
+
+    private val _question = MutableStateFlow<String?>(null)
+    val question: StateFlow<String?> = _question
 
     private val _isAnswerCorrect = MutableStateFlow<Boolean?>(null)
     val isAnswerCorrect: StateFlow<Boolean?> = _isAnswerCorrect
@@ -55,19 +64,28 @@ class QuizViewModel(private val flashRepository: FlashRepository) : ViewModel() 
     }
 
     fun onSubmit() {
-        val isCorrect = (index == correctAnswerIndex)
-        _isAnswerCorrect.value = isCorrect
-        _userAnswers.value.add(answer to isCorrect)
-        _questionAnswers.value.add(question to isCorrect)
+        val selectedAnswer = _selectedAnswer.value
+        val correctAnswerIndex = _correctAnswerIndex.value
 
-        viewModelScope.launch {
-            delay(1000)
-            if (_currentIndex.value < _flashCards.value.size - 1) {
-                _currentIndex.value += 1
-                _selectedAnswer.value = null
-                _isAnswerCorrect.value = null
-            } else {
-                _showSummary.value = true
+        if (selectedAnswer != null && correctAnswerIndex != null) {
+            val flashCard = _flashCards.value.getOrNull(_currentIndex.value)
+            if (flashCard != null) {
+                val isCorrect = flashCard.answers[correctAnswerIndex] == selectedAnswer
+                _isAnswerCorrect.value = isCorrect
+                _userAnswers.value.add(selectedAnswer to isCorrect)
+                _questionAnswers.value.add((_question.value to isCorrect) as Pair<String, Boolean>)
+
+                viewModelScope.launch {
+                    delay(1000) // Wait for 1 second
+                    if (_currentIndex.value < _flashCards.value.size - 1) {
+                        _index.value = -1
+                        _currentIndex.value += 1
+                        _selectedAnswer.value = null
+                        _isAnswerCorrect.value = null
+                    } else {
+                        _showSummary.value = true
+                    }
+                }
             }
         }
     }
@@ -79,6 +97,9 @@ class QuizViewModel(private val flashRepository: FlashRepository) : ViewModel() 
         _isAnswerCorrect.value = null
         _userAnswers.value = mutableListOf()
         _questionAnswers.value = mutableListOf()
+        _index.value = -1
+        _correctAnswerIndex.value = null
+        _question.value = null
         getFlashCards()
     }
 }

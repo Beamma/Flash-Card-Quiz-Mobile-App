@@ -70,39 +70,70 @@ fun PlayQuizScreen(navController: NavController, quizViewModel: QuizViewModel = 
         }
     } else if (!showSummary) {
         val currentFlashcard = flashCards.getOrNull(currentIndex)
+
         currentFlashcard?.let {
-            Column(modifier = Modifier.padding(16.dp)) {
+            Column(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxSize()
+            ) {
+                // Display question number and title
                 Text(
                     text = "Question ${currentIndex + 1} of ${flashCards.size}",
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier
+                        .padding(bottom = 16.dp)
+                        .fillMaxWidth()
                 )
-                Text(text = it.title)
-                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = it.title,
+                    modifier = Modifier
+                        .padding(bottom = 16.dp)
+                        .fillMaxWidth()
+                )
 
+                // Display answer buttons
                 it.answers.forEachIndexed { index, answer ->
                     Button(
                         onClick = {
-                            quizViewModel.onAnswerSelected(answer, it.correctAnswerIndex, index, currentFlashcard.title)
+                            quizViewModel.onAnswerSelected(
+                                answer,
+                                it.correctAnswerIndex,
+                                index,
+                                it.title
+                            )
                         },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = when {
                                 selectedAnswer == answer && isAnswerCorrect == true -> Color.Green
                                 selectedAnswer == answer && isAnswerCorrect == false -> Color.Red
-                                else -> Color.DarkGray
+                                selectedAnswer == answer -> Color.DarkGray
+                                else -> Color.LightGray
                             }
-                        )
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp)
                     ) {
                         Text(text = answer)
                     }
-                    Spacer(modifier = Modifier.height(8.dp))
                 }
             }
         }
-        Button(
-            onClick = {
-                quizViewModel.onSubmit()
-            },
-        )
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Button(
+                onClick = {
+                    quizViewModel.onSubmit()
+                }
+            ) {
+                Text(text = "Submit")
+            }
+        }
     } else {
         // Display the summary of the user's performance
         val correctAnswers = userAnswers.count { it.second }
