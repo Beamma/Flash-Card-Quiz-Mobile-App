@@ -37,7 +37,7 @@ class QuizViewModel(private val flashRepository: FlashRepository) : ViewModel() 
         flashRepository.getFlashCards()
         viewModelScope.launch {
             flashRepository.flashCards.collect { cards ->
-                _flashCards.value = cards
+                _flashCards.value = cards.shuffled()
             }
         }
     }
@@ -67,5 +67,6 @@ class QuizViewModel(private val flashRepository: FlashRepository) : ViewModel() 
         _selectedAnswer.value = null
         _isAnswerCorrect.value = null
         _userAnswers.value = mutableListOf()
+        getFlashCards()
     }
 }
