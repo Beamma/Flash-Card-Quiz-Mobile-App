@@ -132,7 +132,7 @@ fun CreateFlashCard(
                             flashRepository.createFlashCard(flashViewModel.title, flashViewModel.answers, flashViewModel.correctAnswerIndex)
                             flashViewModel.resetViewModel()
                             val builder = AlertDialog.Builder(context)
-                            builder.setMessage("Successfully Created note!")
+                            builder.setMessage("Successfully Created Flash Card!")
                                 .setCancelable(false)
                                 .setPositiveButton("Home") { dialog, id ->
                                     navController.navigate("Home")
