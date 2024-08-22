@@ -32,6 +32,7 @@ fun PlayQuizScreen(navController: NavController, quizViewModel: QuizViewModel = 
     val isAnswerCorrect by quizViewModel.isAnswerCorrect.collectAsState()
     val showSummary by quizViewModel.showSummary.collectAsState()
     val userAnswers by quizViewModel.userAnswers.collectAsState()
+    val questionAnswers by quizViewModel.questionAnswers.collectAsState()
 
     if (flashCards.isEmpty()) {
         val padding = 16.dp
@@ -82,7 +83,7 @@ fun PlayQuizScreen(navController: NavController, quizViewModel: QuizViewModel = 
                 it.answers.forEachIndexed { index, answer ->
                     Button(
                         onClick = {
-                            quizViewModel.onAnswerSelected(answer, it.correctAnswerIndex, index)
+                            quizViewModel.onAnswerSelected(answer, it.correctAnswerIndex, index, currentFlashcard.title)
                         },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = when {
@@ -106,6 +107,19 @@ fun PlayQuizScreen(navController: NavController, quizViewModel: QuizViewModel = 
             Text(text = "Quiz Completed!")
             Spacer(modifier = Modifier.height(16.dp))
             Text(text = "You got $correctAnswers out of $totalQuestions correct!")
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Detailed answers summary
+            Text(text = "Detailed Summary:")
+            Spacer(modifier = Modifier.height(8.dp))
+            questionAnswers.forEachIndexed { index, (answer, isCorrect) ->
+                val answerText = if (isCorrect) {
+                    "Correct: $answer"
+                } else {
+                    "Incorrect: $answer"
+                }
+                Text(text = "Question ${index + 1}: $answerText")
+            }
         }
     }
 }
