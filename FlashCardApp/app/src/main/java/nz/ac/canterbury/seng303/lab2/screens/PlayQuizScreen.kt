@@ -1,6 +1,8 @@
 package nz.ac.canterbury.seng303.lab2.screens
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
@@ -73,6 +75,7 @@ fun PlayQuizScreen(navController: NavController, quizViewModel: QuizViewModel = 
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
+                .verticalScroll(rememberScrollState())
         ) {
             // Display current flashcard if available
             val currentFlashcard = flashCards.getOrNull(currentIndex)
@@ -80,7 +83,8 @@ fun PlayQuizScreen(navController: NavController, quizViewModel: QuizViewModel = 
             currentFlashcard?.let {
                 Column(
                     modifier = Modifier
-                        .weight(1f) // Allows Column to expand and take available space
+                        .weight(1f)
+                        .verticalScroll(rememberScrollState())
                 ) {
                     // Display question number and title
                     Text(
