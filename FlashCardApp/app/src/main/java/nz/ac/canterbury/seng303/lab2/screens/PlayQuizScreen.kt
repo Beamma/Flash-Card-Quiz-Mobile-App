@@ -6,6 +6,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -71,6 +72,10 @@ fun PlayQuizScreen(navController: NavController, quizViewModel: QuizViewModel = 
         val currentFlashcard = flashCards.getOrNull(currentIndex)
         currentFlashcard?.let {
             Column(modifier = Modifier.padding(16.dp)) {
+                Text(
+                    text = "Question ${currentIndex + 1} of ${flashCards.size}",
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
                 Text(text = it.title)
                 Spacer(modifier = Modifier.height(16.dp))
 
