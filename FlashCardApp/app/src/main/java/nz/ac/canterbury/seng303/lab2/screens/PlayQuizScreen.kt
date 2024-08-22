@@ -1,5 +1,6 @@
 package nz.ac.canterbury.seng303.lab2.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -11,55 +12,42 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import androidx.compose.material3.Typography
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import nz.ac.canterbury.seng303.lab2.models.FlashCard
 
 import nz.ac.canterbury.seng303.lab2.viewmodels.FlashRepository
+import nz.ac.canterbury.seng303.lab2.viewmodels.QuizViewModel
+import org.koin.core.logger.Logger
 
 @Composable
-fun PlayQuizScreen(navController: NavController, flashRepository: FlashRepository) {
-    // Retrieve flashcards from the repository
-    flashRepository.getFlashCards()
-    val flashCards: List<FlashCard> by flashRepository.flashCards.collectAsState(emptyList())
-    var currentIndex by remember { mutableStateOf(0) }
-    var selectedAnswer by remember { mutableStateOf<String?>(null) }
-    var isAnswerCorrect by remember { mutableStateOf<Boolean?>(null) }
-    var showSummary by remember { mutableStateOf(false) }
-    var userAnswers by remember { mutableStateOf(mutableListOf<Pair<String, Boolean>>()) }
+fun PlayQuizScreen(navController: NavController, quizViewModel: QuizViewModel = viewModel()) {
 
+    // Observe ViewModel state
+    val flashCards by quizViewModel.flashCards.collectAsState()
+    val currentIndex by quizViewModel.currentIndex.collectAsState()
+    val selectedAnswer by quizViewModel.selectedAnswer.collectAsState()
+    val isAnswerCorrect by quizViewModel.isAnswerCorrect.collectAsState()
+    val showSummary by quizViewModel.showSummary.collectAsState()
+    val userAnswers by quizViewModel.userAnswers.collectAsState()
 
-    // Launch a coroutine to fetch flashcards
-    LaunchedEffect(Unit) {
-        flashRepository.getFlashCards()
-    }
-
-    LaunchedEffect(selectedAnswer) {
-        if (selectedAnswer != null && currentIndex < flashCards.size) {
-            delay(1000) // Wait for 1 second
-            currentIndex++
-            selectedAnswer = null
-            isAnswerCorrect = null
-            // Check if we've reached the end of the flashcards
-            if (currentIndex >= flashCards.size) {
-                showSummary = true
-            }
-        }
-    }
-
-    // Display the current flashcard
+    // Display the current flashcard or the summary
     if (!showSummary) {
+        Text(text = "Playing")
         val currentFlashcard = flashCards.getOrNull(currentIndex)
+        Log.v("JOELS", currentFlashcard.toString())
+        Log.v("JOELS", currentIndex.toString())
+        Log.v("JOELS", flashCards.toString())
+        Log.v("JOELS", showSummary.toString())
         currentFlashcard?.let {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(text = it.title)
                 Spacer(modifier = Modifier.height(16.dp))
 
-                it.answers.forEachIndexed {index,  answer ->
+                it.answers.forEachIndexed { index, answer ->
                     Button(
                         onClick = {
-                            selectedAnswer = answer
-                            isAnswerCorrect = (index == it.correctAnswerIndex)
-                            userAnswers.add(answer to isAnswerCorrect!!)
+                            quizViewModel.onAnswerSelected(answer, it.correctAnswerIndex, index)
                         },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = when {

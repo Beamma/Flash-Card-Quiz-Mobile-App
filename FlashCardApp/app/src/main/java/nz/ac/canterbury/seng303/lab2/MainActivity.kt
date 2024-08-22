@@ -45,6 +45,7 @@ import nz.ac.canterbury.seng303.lab2.screens.PlayQuizScreen
 import nz.ac.canterbury.seng303.lab2.ui.theme.Lab1Theme
 import nz.ac.canterbury.seng303.lab2.viewmodels.FlashRepository
 import nz.ac.canterbury.seng303.lab2.viewmodels.FlashViewModel
+import nz.ac.canterbury.seng303.lab2.viewmodels.QuizViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel as koinViewModel
 
 class MainActivity : ComponentActivity() {
@@ -88,20 +89,13 @@ class MainActivity : ComponentActivity() {
 
                     Box(modifier = Modifier.padding(it)) {
                         val flashViewModel: FlashViewModel = viewModel()
-//                        val editNoteViewModel: EditNoteViewModel = viewModel()
+                        val quizViewModel: QuizViewModel = viewModel(
+                            factory = QuizViewModelFactory(flashRepository)
+                        )
                         NavHost(navController = navController, startDestination = "Home") {
                             composable("Home") {
                                 Home(navController = navController, flashViewModel = flashViewModel)
                             }
-//                            composable(
-//                                "NoteCard/{noteId}",
-//                                arguments = listOf(navArgument("noteId") {
-//                                    type = NavType.StringType
-//                                })
-//                            ) { backStackEntry ->
-//                                val noteId = backStackEntry.arguments?.getString("noteId")
-//                                noteId?.let { noteIdParam: String -> NoteCard(noteIdParam, flashRepository)
-//                            }}
                             composable("FlashCard/{noteId}", arguments = listOf(navArgument("noteId") {
                                 type = NavType.StringType
                             })
@@ -113,7 +107,7 @@ class MainActivity : ComponentActivity() {
                                 FlashCardList(navController, flashRepository)
                             }
                             composable("Play") {
-                                PlayQuizScreen(navController, flashRepository)
+                                PlayQuizScreen(navController, quizViewModel)
                             }
                             composable("CreateFlashCard") {
                                 CreateFlashCard(navController = navController, flashViewModel = flashViewModel, flashRepository = flashRepository)
