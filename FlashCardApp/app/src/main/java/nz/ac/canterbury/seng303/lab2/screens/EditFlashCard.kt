@@ -128,6 +128,8 @@ fun EditFlashCard(
             Button(
                 onClick = {
                     val hasEmptyAnswer = flashViewModel.answers.any { it.trim().isEmpty() }
+                    val uniqueAnswers = flashViewModel.answers.map { it.trim() }.toSet()
+                    val hasDuplicateAnswers = flashViewModel.answers.size != uniqueAnswers.size
                     when {
                         flashViewModel.title.trim().isEmpty() -> {
                             Toast.makeText(context, "Question cannot be empty", Toast.LENGTH_SHORT)
@@ -164,6 +166,10 @@ fun EditFlashCard(
                                 "Please ensure that you have text in all inputs",
                                 Toast.LENGTH_SHORT
                             ).show()
+                        }
+
+                        hasDuplicateAnswers -> {
+                            Toast.makeText(context, "Please ensure that all answers are unique", Toast.LENGTH_SHORT).show()
                         }
 
                         else -> {
