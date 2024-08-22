@@ -1,24 +1,17 @@
 package nz.ac.canterbury.seng303.lab2.screens
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.delay
-import androidx.compose.material3.Typography
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import nz.ac.canterbury.seng303.lab2.models.FlashCard
 
-import nz.ac.canterbury.seng303.lab2.viewmodels.FlashRepository
 import nz.ac.canterbury.seng303.lab2.viewmodels.QuizViewModel
-import org.koin.core.logger.Logger
 
 @Composable
 fun PlayQuizScreen(navController: NavController, quizViewModel: QuizViewModel = viewModel()) {

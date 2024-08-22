@@ -60,4 +60,12 @@ class QuizViewModel(private val flashRepository: FlashRepository) : ViewModel() 
             }
         }
     }
+
+    fun resetViewModel() {
+        _currentIndex.value = 0;
+        _showSummary.value = false;
+        _selectedAnswer.value = null
+        _isAnswerCorrect.value = null
+        _userAnswers.value = mutableListOf()
+    }
 }
