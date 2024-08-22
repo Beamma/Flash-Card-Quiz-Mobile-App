@@ -69,69 +69,76 @@ fun PlayQuizScreen(navController: NavController, quizViewModel: QuizViewModel = 
             }
         }
     } else if (!showSummary) {
-        val currentFlashcard = flashCards.getOrNull(currentIndex)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
+            // Display current flashcard if available
+            val currentFlashcard = flashCards.getOrNull(currentIndex)
 
-        currentFlashcard?.let {
-            Column(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxSize()
-            ) {
-                // Display question number and title
-                Text(
-                    text = "Question ${currentIndex + 1} of ${flashCards.size}",
+            currentFlashcard?.let {
+                Column(
                     modifier = Modifier
-                        .padding(bottom = 16.dp)
-                        .fillMaxWidth()
-                )
-                Text(
-                    text = it.title,
-                    modifier = Modifier
-                        .padding(bottom = 16.dp)
-                        .fillMaxWidth()
-                )
-
-                // Display answer buttons
-                it.answers.forEachIndexed { index, answer ->
-                    Button(
-                        onClick = {
-                            quizViewModel.onAnswerSelected(
-                                answer,
-                                it.correctAnswerIndex,
-                                index,
-                                it.title
-                            )
-                        },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = when {
-                                selectedAnswer == answer && isAnswerCorrect == true -> Color.Green
-                                selectedAnswer == answer && isAnswerCorrect == false -> Color.Red
-                                selectedAnswer == answer -> Color.DarkGray
-                                else -> Color.LightGray
-                            }
-                        ),
+                        .weight(1f) // Allows Column to expand and take available space
+                ) {
+                    // Display question number and title
+                    Text(
+                        text = "Question ${currentIndex + 1} of ${flashCards.size}",
                         modifier = Modifier
+                            .padding(bottom = 16.dp)
                             .fillMaxWidth()
-                            .padding(vertical = 4.dp)
-                    ) {
-                        Text(text = answer)
+                    )
+                    Text(
+                        text = it.title,
+                        modifier = Modifier
+                            .padding(bottom = 16.dp)
+                            .fillMaxWidth()
+                    )
+
+                    // Display answer buttons
+                    it.answers.forEachIndexed { index, answer ->
+                        Button(
+                            onClick = {
+                                quizViewModel.onAnswerSelected(
+                                    answer,
+                                    it.correctAnswerIndex,
+                                    index,
+                                    it.title
+                                )
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = when {
+                                    selectedAnswer == answer && isAnswerCorrect == true -> Color.Green
+                                    selectedAnswer == answer && isAnswerCorrect == false -> Color.Red
+                                    selectedAnswer == answer -> Color.DarkGray
+                                    else -> Color.LightGray
+                                }
+                            ),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp)
+                        ) {
+                            Text(text = answer)
+                        }
                     }
                 }
             }
-        }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Button(
-                onClick = {
-                    quizViewModel.onSubmit()
-                }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
             ) {
-                Text(text = "Submit")
+                Button(
+                    onClick = {
+                        quizViewModel.onSubmit()
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                ) {
+                    Text(text = "Submit")
+                }
             }
         }
     } else {
