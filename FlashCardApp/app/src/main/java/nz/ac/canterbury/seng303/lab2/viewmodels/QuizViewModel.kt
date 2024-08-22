@@ -1,6 +1,5 @@
 package nz.ac.canterbury.seng303.lab2.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
