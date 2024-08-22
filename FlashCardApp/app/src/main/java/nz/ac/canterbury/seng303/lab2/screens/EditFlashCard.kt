@@ -115,8 +115,9 @@ fun EditFlashCard(
 
         Button(
             onClick = {
+                val hasEmptyAnswer = flashViewModel.answers.any { it.trim().isEmpty() }
                 when {
-                    flashViewModel.title.isEmpty() -> {
+                    flashViewModel.title.trim().isEmpty() -> {
                         Toast.makeText(context, "Question cannot be empty", Toast.LENGTH_SHORT).show()
                     }
                     flashViewModel.answers.isEmpty() -> {
@@ -125,16 +126,22 @@ fun EditFlashCard(
                     flashViewModel.correctAnswerIndex == -1 -> {
                         Toast.makeText(context, "Please select at least one correct answer", Toast.LENGTH_SHORT).show()
                     }
+                    flashViewModel.answers.contains("") -> {
+                        Toast.makeText(context, "Please ensure that you have text in all inputs", Toast.LENGTH_SHORT).show()
+                    }
+                    hasEmptyAnswer -> {
+                        Toast.makeText(context, "Please ensure that you have text in all inputs", Toast.LENGTH_SHORT).show()
+                    }
                     else -> {
                         flashRepository.editNoteById(noteId.toIntOrNull(), flashCard = FlashCard(noteId.toInt(), flashViewModel.title, flashViewModel.answers, flashViewModel.correctAnswerIndex))
                         val builder = AlertDialog.Builder(context)
                         builder.setMessage("Updated note!")
                             .setCancelable(false)
-                            .setPositiveButton("Ok") { dialog, id ->
+                            .setPositiveButton("Return To List") { dialog, id ->
                                 flashViewModel.resetViewModel()
-                                navController.navigate("FlashCardList")
+                                navController.popBackStack()
                             }
-                            .setNegativeButton("Cancel") { dialog, id -> dialog.dismiss() }
+                            .setNegativeButton("Close") { dialog, id -> dialog.dismiss() }
                         val alert = builder.create()
                         alert.show()
                     }

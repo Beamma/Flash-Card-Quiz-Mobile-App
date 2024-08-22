@@ -91,7 +91,7 @@ class MainActivity : ComponentActivity() {
 //                        val editNoteViewModel: EditNoteViewModel = viewModel()
                         NavHost(navController = navController, startDestination = "Home") {
                             composable("Home") {
-                                Home(navController = navController)
+                                Home(navController = navController, flashViewModel = flashViewModel)
                             }
 //                            composable(
 //                                "NoteCard/{noteId}",
@@ -128,7 +128,7 @@ class MainActivity : ComponentActivity() {
 
 
 @Composable
-fun Home(navController: NavController) {
+fun Home(navController: NavController, flashViewModel: FlashViewModel) {
     val configuration = LocalConfiguration.current
     val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
     Box(
@@ -150,7 +150,8 @@ fun Home(navController: NavController) {
                 )
             }
             Button(
-                onClick = { navController.navigate("CreateFlashCard") },
+                onClick = { navController.navigate("CreateFlashCard")
+                            flashViewModel.resetViewModel()},
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp)
