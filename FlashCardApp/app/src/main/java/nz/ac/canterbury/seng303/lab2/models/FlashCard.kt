@@ -10,5 +10,18 @@ class FlashCard (
     override fun getIdentifier(): Int {
         return id;
     }
+
+    fun getShuffledFlashCard(): FlashCard {
+        // Shuffle the answers and keep track of the new correct index
+        val shuffledAnswers = answers.shuffled()
+        val newCorrectAnswerIndex = shuffledAnswers.indexOf(answers[correctAnswerIndex])
+
+        return FlashCard(
+            id = this.id,
+            title = this.title,
+            answers = shuffledAnswers,
+            correctAnswerIndex = newCorrectAnswerIndex
+        )
+    }
 }
 

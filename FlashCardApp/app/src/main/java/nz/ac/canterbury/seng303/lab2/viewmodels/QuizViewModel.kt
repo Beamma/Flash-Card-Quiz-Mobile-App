@@ -40,9 +40,11 @@ class QuizViewModel(private val flashRepository: FlashRepository) : ViewModel() 
         flashRepository.getFlashCards()
         viewModelScope.launch {
             flashRepository.flashCards.collect { cards ->
-                _flashCards.value = cards.shuffled()
+                val shuffledCards = cards.map { it.getShuffledFlashCard() }
+                _flashCards.value = shuffledCards.shuffled()
             }
         }
+
     }
 
     // Handle answer selection
