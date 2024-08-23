@@ -97,7 +97,11 @@ fun PlayQuizScreen(navController: NavController, quizViewModel: QuizViewModel = 
                         text = it.title,
                         modifier = Modifier
                             .padding(bottom = 16.dp)
-                            .fillMaxWidth()
+                            .fillMaxWidth(),
+                        style = TextStyle(
+                                fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center)
                     )
 
                     // Display answer buttons
