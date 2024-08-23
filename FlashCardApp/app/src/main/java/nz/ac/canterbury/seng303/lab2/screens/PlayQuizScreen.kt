@@ -1,5 +1,6 @@
 package nz.ac.canterbury.seng303.lab2.screens
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -7,7 +8,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -150,25 +155,77 @@ fun PlayQuizScreen(navController: NavController, quizViewModel: QuizViewModel = 
             }
         }
     } else {
-        // Display the summary of the user's performance
-        val correctAnswers = userAnswers.count { it.second }
-        val totalQuestions = flashCards.size
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = "Quiz Completed!")
+            Text(
+                text = "Quiz Completed!",
+                style = TextStyle(
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
+                ),
+                modifier = Modifier.fillMaxWidth()
+            )
             Spacer(modifier = Modifier.height(16.dp))
+
+            val correctAnswers = userAnswers.count { it.second }
+            val totalQuestions = flashCards.size
             Text(text = "You got $correctAnswers out of $totalQuestions correct!")
             Spacer(modifier = Modifier.height(16.dp))
 
             // Detailed answers summary
-            Text(text = "Detailed Summary:")
+            Text(text = "Detailed Summary", style = TextStyle(
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                fontSize = 18.sp,
+            ))
             Spacer(modifier = Modifier.height(8.dp))
+
             questionAnswers.forEachIndexed { index, (answer, isCorrect) ->
-                val answerText = if (isCorrect) {
-                    "Correct: $answer"
-                } else {
-                    "Incorrect: $answer"
+                ElevatedCard(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                        .border(
+                            width = 2.dp, // Set the border width
+                            color = if (isCorrect) Color.Green else Color.Red, // Green if correct, Red if incorrect
+                            shape = MaterialTheme.shapes.medium // You can adjust the shape if needed
+                        ),
+                    elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
+                    colors = CardDefaults.elevatedCardColors(
+                        containerColor = Color.LightGray
+                    )
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        val answerText = if (isCorrect) {
+                            "Correct"
+                        } else {
+                            "Incorrect"
+                        }
+                        Text(text = "${index + 1}: $answerText",
+                            style = TextStyle(
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 18.sp,
+                            )
+                        )
+                        Text(text = answer,
+                            style = TextStyle(
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold,
+                            )
+                        )
+                        Divider(
+                            color = if (isCorrect) Color.Green else Color.Red,
+                            thickness = 2.dp,
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                                .padding(4.dp)
+                        )
+                        Text(text = "Correct Answer: This is the correct answer",
+                            style = TextStyle(
+                                fontSize = 12.sp
+                            )
+                        )
+                    }
                 }
-                Text(text = "Question ${index + 1}: $answerText")
             }
         }
     }
