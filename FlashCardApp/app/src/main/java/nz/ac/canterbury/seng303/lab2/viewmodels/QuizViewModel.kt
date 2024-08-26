@@ -40,6 +40,9 @@ class QuizViewModel(private val flashRepository: FlashRepository) : ViewModel() 
     private val _questionAnswers = MutableStateFlow(mutableListOf<Pair<String, Boolean>>())
     val questionAnswers: StateFlow<List<Pair<String, Boolean>>> = _questionAnswers
 
+    private val _correctAnswers = MutableStateFlow(mutableListOf<String>())
+    val correctAnswers: StateFlow<List<String>> = _correctAnswers
+
     init {
         getFlashCards()
     }
@@ -71,6 +74,7 @@ class QuizViewModel(private val flashRepository: FlashRepository) : ViewModel() 
             val flashCard = _flashCards.value.getOrNull(_currentIndex.value)
             if (flashCard != null) {
                 val isCorrect = flashCard.answers[correctAnswerIndex] == selectedAnswer
+                _correctAnswers.value.add(flashCard.answers[correctAnswerIndex])
                 _isAnswerCorrect.value = isCorrect
                 _userAnswers.value.add(selectedAnswer to isCorrect)
                 _questionAnswers.value.add((_question.value to isCorrect) as Pair<String, Boolean>)

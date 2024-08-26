@@ -39,6 +39,7 @@ fun PlayQuizScreen(navController: NavController, quizViewModel: QuizViewModel = 
     val showSummary by quizViewModel.showSummary.collectAsState()
     val userAnswers by quizViewModel.userAnswers.collectAsState()
     val questionAnswers by quizViewModel.questionAnswers.collectAsState()
+    val actualCorrectAnswers by quizViewModel.correctAnswers.collectAsState()
 
     if (flashCards.isEmpty()) {
         val padding = 16.dp
@@ -207,23 +208,39 @@ fun PlayQuizScreen(navController: NavController, quizViewModel: QuizViewModel = 
                                 fontSize = 18.sp,
                             )
                         )
-                        Text(text = answer,
-                            style = TextStyle(
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.Bold,
-                            )
-                        )
                         Divider(
                             color = if (isCorrect) Color.Green else Color.Red,
                             thickness = 2.dp,
                             modifier = Modifier.padding(horizontal = 16.dp)
                                 .padding(4.dp)
                         )
-                        Text(text = "Correct Answer: This is the correct answer",
+                        Text(text = answer,
                             style = TextStyle(
-                                fontSize = 12.sp
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold,
                             )
                         )
+                        if (isCorrect) {
+                            Text(
+                                text = "You Correctly Answered: ${userAnswers[index].first}",
+                                style = TextStyle(
+                                    fontSize = 12.sp
+                                )
+                            )
+                        } else {
+                            Text(
+                                text = "You Answered: ${userAnswers[index].first}",
+                                style = TextStyle(
+                                    fontSize = 12.sp
+                                )
+                            )
+                            Text(
+                                text = "Correct Answer: ${actualCorrectAnswers[index]}",
+                                style = TextStyle(
+                                    fontSize = 12.sp
+                                )
+                            )
+                        }
                     }
                 }
             }
