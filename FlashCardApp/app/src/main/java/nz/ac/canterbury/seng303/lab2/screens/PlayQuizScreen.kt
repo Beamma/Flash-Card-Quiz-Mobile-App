@@ -1,5 +1,6 @@
 package nz.ac.canterbury.seng303.lab2.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -11,13 +12,16 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -25,14 +29,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import nz.ac.canterbury.seng303.lab2.viewmodels.FlashRepository
 
 import nz.ac.canterbury.seng303.lab2.viewmodels.QuizViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PlayQuizScreen(navController: NavController, quizViewModel: QuizViewModel = viewModel()) {
+fun PlayQuizScreen(navController: NavController, quizViewModel: QuizViewModel = viewModel(), flashRepository: FlashRepository) {
 
     // Observe ViewModel state
-    val flashCards by quizViewModel.flashCards.collectAsState()
+    val items by quizViewModel.flashCards.collectAsState()
+    val flashCards = items.filter { it.isFlashCard }
     val currentIndex by quizViewModel.currentIndex.collectAsState()
     val selectedAnswer by quizViewModel.selectedAnswer.collectAsState()
     val isAnswerCorrect by quizViewModel.isAnswerCorrect.collectAsState()
@@ -40,6 +47,8 @@ fun PlayQuizScreen(navController: NavController, quizViewModel: QuizViewModel = 
     val userAnswers by quizViewModel.userAnswers.collectAsState()
     val questionAnswers by quizViewModel.questionAnswers.collectAsState()
     val actualCorrectAnswers by quizViewModel.correctAnswers.collectAsState()
+
+    val context = LocalContext.current
 
     if (flashCards.isEmpty()) {
         val padding = 16.dp
@@ -74,6 +83,40 @@ fun PlayQuizScreen(navController: NavController, quizViewModel: QuizViewModel = 
                         modifier = Modifier.size(16.dp)
                     )
                 }
+            }
+        }
+    } else if (!quizViewModel.startGame) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
+            OutlinedTextField(
+                value = quizViewModel.userName,
+                onValueChange = { quizViewModel.userName = it },
+                label = { Text("Your Name") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp)
+            )
+            Button(
+                onClick = {
+                    when {
+                        quizViewModel.userName.trim().isEmpty() -> {
+                            Toast.makeText(context, "Your name can not be empty", Toast.LENGTH_SHORT).show()
+                        }
+                        else -> {
+                            quizViewModel.startGame = true
+                        }
+                    }
+
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                Text(text = "Start Quiz")
             }
         }
     } else if (!showSummary) {
@@ -156,7 +199,7 @@ fun PlayQuizScreen(navController: NavController, quizViewModel: QuizViewModel = 
             }
         }
     } else {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(16.dp).verticalScroll(rememberScrollState())) {
             Text(
                 text = "Quiz Completed!",
                 style = TextStyle(
@@ -242,6 +285,48 @@ fun PlayQuizScreen(navController: NavController, quizViewModel: QuizViewModel = 
                             )
                         }
                     }
+                }
+            }
+            if (!quizViewModel.addedToLeaderboard) {
+                Button(
+                    onClick = {
+                        flashRepository.createFlashCard(
+                            quizViewModel.userName,
+                            listOf("Fake1, Fake2"),
+                            correctAnswers,
+                            false
+                        )
+                        quizViewModel.addedToLeaderboard = true
+                        Toast.makeText(context, "Successfully Added To Leaderboard", Toast.LENGTH_SHORT).show()
+                    },
+                    modifier = Modifier.padding(16.dp)
+                        .fillMaxWidth()
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text("Save Result To Leaderboard")
+                        Icon(
+                            imageVector = Icons.Filled.Add,
+                            contentDescription = "Add",
+                            modifier = Modifier.size(16.dp)
+                        )
+                    }
+                }
+            }
+            Button(
+                onClick = {
+                    navController.navigate("LeaderBoard")
+                },
+                modifier = Modifier.padding(16.dp)
+                    .fillMaxWidth()
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text("View Leaderboard")
                 }
             }
         }

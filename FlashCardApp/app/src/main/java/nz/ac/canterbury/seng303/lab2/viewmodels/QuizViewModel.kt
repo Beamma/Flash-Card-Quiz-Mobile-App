@@ -1,10 +1,14 @@
 package nz.ac.canterbury.seng303.lab2.viewmodels
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import nz.ac.canterbury.seng303.lab2.models.FlashCard
 
@@ -43,6 +47,12 @@ class QuizViewModel(private val flashRepository: FlashRepository) : ViewModel() 
     private val _correctAnswers = MutableStateFlow(mutableListOf<String>())
     val correctAnswers: StateFlow<List<String>> = _correctAnswers
 
+    var addedToLeaderboard: Boolean by mutableStateOf(false)
+
+    var userName: String by mutableStateOf("")
+
+    var startGame: Boolean by mutableStateOf(false)
+
     init {
         getFlashCards()
     }
@@ -71,8 +81,11 @@ class QuizViewModel(private val flashRepository: FlashRepository) : ViewModel() 
         val correctAnswerIndex = _correctAnswerIndex.value
 
         if (selectedAnswer != null && correctAnswerIndex != null) {
-            val flashCard = _flashCards.value.getOrNull(_currentIndex.value)
+            val flashCard = _flashCards.value.filter { it.isFlashCard }.getOrNull(_currentIndex.value)
             if (flashCard != null) {
+                println(selectedAnswer)
+                println(flashCard.answers)
+                println(correctAnswerIndex)
                 val isCorrect = flashCard.answers[correctAnswerIndex] == selectedAnswer
                 _correctAnswers.value.add(flashCard.answers[correctAnswerIndex])
                 _isAnswerCorrect.value = isCorrect
@@ -81,7 +94,7 @@ class QuizViewModel(private val flashRepository: FlashRepository) : ViewModel() 
 
                 viewModelScope.launch {
                     delay(1000) // Wait for 1 second
-                    if (_currentIndex.value < _flashCards.value.size - 1) {
+                    if (_currentIndex.value < _flashCards.value.filter { it.isFlashCard }.size - 1) {
                         _index.value = -1
                         _currentIndex.value += 1
                         _selectedAnswer.value = null
@@ -104,6 +117,9 @@ class QuizViewModel(private val flashRepository: FlashRepository) : ViewModel() 
         _index.value = -1
         _correctAnswerIndex.value = null
         _question.value = null
+        addedToLeaderboard = false;
+        userName = ""
+        startGame = false
         getFlashCards()
     }
 }

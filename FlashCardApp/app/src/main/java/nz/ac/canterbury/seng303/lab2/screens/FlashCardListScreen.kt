@@ -47,7 +47,8 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun FlashCardList(navController: NavController, flashRepository: FlashRepository) {
     flashRepository.getFlashCards()
-    val flashCards: List<FlashCard> by flashRepository.flashCards.collectAsState(emptyList())
+    val items: List<FlashCard> by flashRepository.flashCards.collectAsState(emptyList())
+    val flashCards = items.filter { it.isFlashCard }
     if (flashCards.isEmpty()) {
         val padding = 16.dp
 
@@ -90,7 +91,7 @@ fun FlashCardList(navController: NavController, flashRepository: FlashRepository
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
             ) {
-                items(flashCards) { flashCard ->
+                items(flashCards.filter { it.isFlashCard }) { flashCard ->
                     FlashCardItem(navController = navController, flashCard = flashCard, flashRepository = flashRepository)
                 }
 

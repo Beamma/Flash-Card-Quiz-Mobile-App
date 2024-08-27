@@ -41,6 +41,7 @@ import androidx.navigation.navArgument
 import nz.ac.canterbury.seng303.lab2.screens.CreateFlashCard
 import nz.ac.canterbury.seng303.lab2.screens.EditFlashCard
 import nz.ac.canterbury.seng303.lab2.screens.FlashCardList
+import nz.ac.canterbury.seng303.lab2.screens.LeaderBoard
 import nz.ac.canterbury.seng303.lab2.screens.PlayQuizScreen
 import nz.ac.canterbury.seng303.lab2.ui.theme.Lab1Theme
 import nz.ac.canterbury.seng303.lab2.viewmodels.FlashRepository
@@ -107,10 +108,13 @@ class MainActivity : ComponentActivity() {
                                 FlashCardList(navController, flashRepository)
                             }
                             composable("Play") {
-                                PlayQuizScreen(navController, quizViewModel)
+                                PlayQuizScreen(navController, quizViewModel, flashRepository)
                             }
                             composable("CreateFlashCard") {
                                 CreateFlashCard(navController = navController, flashViewModel = flashViewModel, flashRepository = flashRepository)
+                            }
+                            composable("LeaderBoard") {
+                                LeaderBoard(navController = navController, flashRepository = flashRepository)
                             }
                         }
                     }
@@ -196,6 +200,27 @@ fun Home(navController: NavController, flashViewModel: FlashViewModel, quizViewM
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text("Play Flash Cards", style = TextStyle(fontSize = 20.sp))
+                    Icon(
+                        imageVector = Icons.Filled.Lightbulb,
+                        contentDescription = "View",
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+            }
+
+            Button(
+                onClick = {
+                    navController.navigate("LeaderBoard")
+                    quizViewModel.resetViewModel() },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(60.dp)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text("View Leaderboard", style = TextStyle(fontSize = 20.sp))
                     Icon(
                         imageVector = Icons.Filled.Lightbulb,
                         contentDescription = "View",

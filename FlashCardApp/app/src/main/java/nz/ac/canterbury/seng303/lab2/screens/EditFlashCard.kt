@@ -179,7 +179,8 @@ fun EditFlashCard(
                                     noteId.toInt(),
                                     flashViewModel.title,
                                     flashViewModel.answers,
-                                    flashViewModel.correctAnswerIndex
+                                    flashViewModel.correctAnswerIndex,
+                                    true
                                 )
                             )
                             val builder = AlertDialog.Builder(context)

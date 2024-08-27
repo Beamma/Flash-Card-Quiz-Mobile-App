@@ -29,12 +29,13 @@ class FlashRepository(
             .collect { _flashCards.emit(it) }
     }
 
-    fun createFlashCard(title: String, answers: List<String>, correctAnswerIndex: Int) = viewModelScope.launch {
+    fun createFlashCard(title: String, answers: List<String>, correctAnswerIndex: Int, isFlashCard: Boolean) = viewModelScope.launch {
         val flashCard = FlashCard(
             id = Random.nextInt(0, Int.MAX_VALUE),
             title = title,
             answers = answers,
-            correctAnswerIndex = correctAnswerIndex
+            correctAnswerIndex = correctAnswerIndex,
+            isFlashCard = isFlashCard
         )
         flashStorage.insert(flashCard).catch { Log.e("NOTE_VIEW_MODEL", "Could not insert note") }
             .collect()

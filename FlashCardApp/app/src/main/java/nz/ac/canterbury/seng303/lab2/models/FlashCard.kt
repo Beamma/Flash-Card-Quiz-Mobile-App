@@ -4,7 +4,8 @@ class FlashCard (
     val id: Int,
     val title: String,
     val answers: List<String>,
-    val correctAnswerIndex: Int
+    val correctAnswerIndex: Int,
+    val isFlashCard: Boolean
     ): Identifiable {
 
     override fun getIdentifier(): Int {
@@ -13,14 +14,21 @@ class FlashCard (
 
     fun getShuffledFlashCard(): FlashCard {
         // Shuffle the answers and keep track of the new correct index
-        val shuffledAnswers = answers.shuffled()
-        val newCorrectAnswerIndex = shuffledAnswers.indexOf(answers[correctAnswerIndex])
+        var shuffledAnswers = answers
+        var newCorrectAnswerIndex = correctAnswerIndex
+
+        println(title)
+        if (isFlashCard) {
+            shuffledAnswers = answers.shuffled()
+            newCorrectAnswerIndex = shuffledAnswers.indexOf(answers[correctAnswerIndex])
+        }
 
         return FlashCard(
             id = this.id,
             title = this.title,
             answers = shuffledAnswers,
-            correctAnswerIndex = newCorrectAnswerIndex
+            correctAnswerIndex = newCorrectAnswerIndex,
+            isFlashCard = this.isFlashCard
         )
     }
 }

@@ -134,7 +134,7 @@ fun CreateFlashCard(
                             Toast.makeText(context, "Please ensure that you have text in all inputs", Toast.LENGTH_SHORT).show()
                         }
                         else -> {
-                            flashRepository.createFlashCard(flashViewModel.title, flashViewModel.answers, flashViewModel.correctAnswerIndex)
+                            flashRepository.createFlashCard(flashViewModel.title, flashViewModel.answers, flashViewModel.correctAnswerIndex, true)
                             flashViewModel.resetViewModel()
                             val builder = AlertDialog.Builder(context)
                             builder.setMessage("Successfully Created Flash Card!")
