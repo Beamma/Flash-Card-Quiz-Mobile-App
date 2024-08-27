@@ -69,20 +69,73 @@ fun LeaderBoard(navController: NavController, flashRepository: FlashRepository) 
             }
         }
     } else {
-        LazyColumn {
-            results.forEachIndexed {index,  result ->
-                item {Text (
-                    text = "${index+1}: ${result.title} Score: ${result.correctAnswerIndex}",
-                    style = TextStyle(
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center
-                    ),
+        LazyColumn(
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .fillMaxWidth()
+        ) {
+            // Table header
+            item {
+                Row(
                     modifier = Modifier
-                        .padding(bottom = padding)
                         .fillMaxWidth()
-                )}
+                        .padding(vertical = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "Rank",
+                        style = TextStyle(
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold
+                        ),
+                        modifier = Modifier.weight(1f)
+                    )
+                    Text(
+                        text = "Name",
+                        style = TextStyle(
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold
+                        ),
+                        modifier = Modifier.weight(3f)
+                    )
+                    Text(
+                        text = "Score",
+                        style = TextStyle(
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold
+                        ),
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
+
+            // Table rows
+            items(results.size) { index ->
+                val result = results[index]
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "${index + 1}",
+                        style = TextStyle(fontSize = 18.sp),
+                        modifier = Modifier.weight(1f)
+                    )
+                    Text(
+                        text = result.title,
+                        style = TextStyle(fontSize = 18.sp),
+                        modifier = Modifier.weight(3f)
+                    )
+                    Text(
+                        text = "${result.correctAnswerIndex}",
+                        style = TextStyle(fontSize = 18.sp),
+                        modifier = Modifier.weight(1f)
+                    )
+                }
             }
         }
+
     }
 }
